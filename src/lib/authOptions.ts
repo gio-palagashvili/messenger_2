@@ -13,7 +13,7 @@ const getENV = () => {
 
     return { clientId, clientSectet }
 }
-const googleENV = getENV();
+const _ = getENV();
 
 export const authOptions: NextAuthOptions = {
     adapter: UpstashRedisAdapter(db),
@@ -25,8 +25,22 @@ export const authOptions: NextAuthOptions = {
     },
     providers: [
         GoogleProvider({
-            clientId: googleENV.clientId,
-            clientSecret: googleENV.clientSectet
+            clientId: _.clientId,
+            clientSecret: _.clientSectet
         })
-    ]
+    ],
+    callbacks: {
+        async jwt({ token, user }) {
+            const checkUser = await db.get(`user:${token.id}`) as User | null;
+            if (checkUser) {
+                return { id: checkUser.id, name: checkUser.name, email: checkUser.email }
+            }
+            // !idk
+            token.id = user!.id
+            return token;
+        },
+        async session({ session, token }) {
+
+        }
+    }
 }
