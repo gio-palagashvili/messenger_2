@@ -1,8 +1,8 @@
+import { db } from "@/lib/db";
 import { FC } from "react";
 
-interface pageProps {}
-
-const page: FC<pageProps> = ({}) => {
+const page = async ({}) => {
+  //   await db.set("hello", "world");
   return <div>page</div>;
 };
 
