@@ -1,9 +1,9 @@
+import Button from "@/components/ui/Button";
 import { db } from "@/lib/db";
 import { FC } from "react";
 
 const page = async ({}) => {
-  //   await db.set("hello", "world");
-  return <div>page</div>;
+  return <div>home</div>;
 };
 
 export default page;
