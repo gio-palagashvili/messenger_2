@@ -40,7 +40,16 @@ export const authOptions: NextAuthOptions = {
             return token;
         },
         async session({ session, token }) {
-
+            if (token) {
+                session.user.id = token.id;
+                session.user.name = token.name
+                session.user.email = token.email
+                session.user.image = token.picture
+            }
+            return session;
+        },
+        redirect() {
+            return "/home"
         }
     }
 }
