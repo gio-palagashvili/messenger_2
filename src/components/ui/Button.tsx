@@ -4,11 +4,11 @@ import { Loader2 } from "lucide-react";
 import { ButtonHTMLAttributes, FC } from "react";
 
 export const buttonVariants = cva(
-  "active:scale-95 inline-flex items-center justify-center rounded-md text-sm font-medium transition-color focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+  "active:scale-95 duration-200 inline-flex items-center justify-center rounded-md text-sm font-medium disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:outline-blue-500",
   {
     variants: {
       variant: {
-        default: "bg-slate-900 text-white hover:bg-slate-800",
+        default: "bg-gray-800 text-white hover:bg-gray-900",
         ghost: "bg-transparent hover:text-slate-900 hover:bg-slate-200",
       },
       size: {
@@ -44,7 +44,22 @@ const Button: FC<ButtonProps> = ({
       disabled={isLoading}
       {...props}
     >
-      {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+      {isLoading ? (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-loader-2 animate-spin h-5 w-5"
+        >
+          <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+        </svg>
+      ) : null}
       {children}
     </button>
   );
