@@ -19,7 +19,7 @@ const page = ({}) => {
 
   return (
     <div className="w-full min-h-screen flex justify-center place-items-center flex-col gap-4">
-      <h1 className="text-3xl">Sign into your account with</h1>
+      <h1 className="text-2xl">Sign into your account with</h1>
       <Button
         className="flex justify-center place-items-center gap-2 w-1/5"
         onClick={loginGoogle}
