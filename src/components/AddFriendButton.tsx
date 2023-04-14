@@ -7,21 +7,22 @@ import { ZodError } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormData } from "@/types/zod";
-
+// todo
 interface AddFriendButtonProps {}
 
 const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   const [complete, setComplete] = useState<boolean>(false);
-  const { register, handleSubmit, setError, formState } = useForm<FormData>({
-    resolver: zodResolver(validateFriend),
-  });
+  const { register, handleSubmit, setError, formState, clearErrors } =
+    useForm<FormData>({
+      resolver: zodResolver(validateFriend),
+    });
 
   const addFriend = async (email: string) => {
     try {
-      const valid = validateFriend.parse({ email });
-      await axios.post("/api/friend/add", {
-        email: email,
-      });
+      const valid = validateFriend.parse({ email: email });
+      // await axios.post("/api/friend/add", {
+      //   email: email,
+      // });
       setComplete(true);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -45,7 +46,6 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       <label htmlFor="email">who u adding</label>
       <input
         type="text"
-        id=""
         {...register("email")}
         className="bg-transparent border-slate-600 border p-2 outline-none"
       />
