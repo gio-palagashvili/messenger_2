@@ -21,6 +21,8 @@ export const fetchRedis = async (command: Command, ...args: (string | number)[])
     });
 
     if (!res.ok) throw new Error(`redis error ${res.statusText}}`);
+
     const data = await res.json();
+
     return data.result;
 }

@@ -7,8 +7,7 @@ import { ZodError } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormData } from "@/types/zod";
-import { handleError } from "@/app/helpers/errorHanlder";
-// todo
+
 interface AddFriendButtonProps {}
 
 const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
@@ -21,7 +20,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   const addFriend = async (email: string) => {
     try {
       const valid = validateFriend.parse({ email });
-      await axios.post("/api/friend/add", {
+      await axios.post("/api/friends/add", {
         email: email,
       });
       clearErrors("email");

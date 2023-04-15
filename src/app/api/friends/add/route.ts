@@ -9,29 +9,32 @@ import { handleError } from "@/app/helpers/errorHanlder";
 
 export const POST = async (req: Request, res: NextApiResponse) => {
     try {
+        console.log("inside try");
         const sess = await getServerSession(authOptions);
         if (!sess) return res.status(401).json({ message: "not authorized" })
 
         const body = await req.json();
-        const { email } = validateFriend.parse(body.email);
+        const { email } = validateFriend.parse({ email: body.email });
 
-        const user = await fetchRedis("get", `user:email${email}}`);
 
-        const data = await user.json() as { result: string | null };
+        const user = await fetchRedis("get", `user:email:${email}`);
 
-        if (data.result) return res.status(400).json({ message: "no user found" })
-        if (data.result === sess.user.email) return res.status(200).json({ message: "u cant add urslef as a friend" })
+        if (!user) return new Response("no user founnd", { status: 200 });
 
-        const alrSent = await fetchRedis("sismember", `user:${data.result}:friend_requests`, sess.user.id) as 0 | 1;
-        const alrAdded = await fetchRedis("sismember", `user:${data.result}:friends`, sess.user.id) as 0 | 1;
+        if (user === sess.user.id) return new Response("can't add urself as a friend", { status: 400 });
 
-        if (alrSent == 0) return res.status(400).json({ message: "already sent" });
-        if (alrAdded == 0) return res.status(400).json({ message: "already friends" });
+        const alrSent = await fetchRedis("sismember", `user:${user}:friend_requests`, sess.user.id) as 0 | 1;
+        const alrAdded = await fetchRedis("sismember", `user:${user}:friends`, sess.user.id) as 0 | 1;
 
-        db.sadd(`user:${data.result}:friend_requests`, sess.user.id)
+        if (alrSent) return new Response("already sent", { status: 200 });
+        if (alrAdded) return new Response("already added", { status: 200 })
+        console.log(user.result);
 
-        return res.status(200);
+        db.sadd(`user:${user.result}:friend_requests`, sess.user.id)
+
+        return new Response("email", { status: 200 })
     } catch (error) {
-        return handleError(error);
+        console.log(error + "}}}}}}}}}");
+        handleError(error)
     }
 }
