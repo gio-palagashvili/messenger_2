@@ -7,6 +7,7 @@ import { ZodError } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormData } from "@/types/zod";
+import { handleError } from "@/app/helpers/errorHanlder";
 // todo
 interface AddFriendButtonProps {}
 
@@ -19,17 +20,20 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
 
   const addFriend = async (email: string) => {
     try {
-      const valid = validateFriend.parse({ email: email });
-      // await axios.post("/api/friend/add", {
-      //   email: email,
-      // });
+      const valid = validateFriend.parse({ email });
+      await axios.post("/api/friend/add", {
+        email: email,
+      });
+      clearErrors("email");
       setComplete(true);
-    } catch (error) {
+    } catch (error: any) {
       if (error instanceof ZodError) {
-        setError("email", { message: error.message });
+        setError("email", { message: "invalid email" });
+        return;
       }
       if (error instanceof AxiosError) {
-        setError("email", { message: error.response?.data });
+        setError("email", { message: "invalid request" });
+        return;
       }
       setError("email", { message: "unknown error" });
     }
@@ -41,7 +45,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   return (
     <form
       className="flex flex-col gap-4 w-1/2"
-      onSubmit={() => handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit)}
     >
       <label htmlFor="email">who u adding</label>
       <input
@@ -51,7 +55,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       />
       <p>{formState.errors.email?.message}</p>
       <p>{complete ? "sent friend request" : ""}</p>
-      <Button type="submit">Add</Button>
+      <Button>Add</Button>
     </form>
   );
 };
