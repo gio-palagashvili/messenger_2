@@ -9,7 +9,6 @@ import { handleError } from "@/app/helpers/errorHanlder";
 
 export const POST = async (req: Request, res: NextApiResponse) => {
     try {
-        console.log("inside try");
         const sess = await getServerSession(authOptions);
         if (!sess) return res.status(401).json({ message: "not authorized" })
 
@@ -19,22 +18,20 @@ export const POST = async (req: Request, res: NextApiResponse) => {
 
         const user = await fetchRedis("get", `user:email:${email}`);
 
-        if (!user) return new Response("no user founnd", { status: 200 });
+        if (!user) return new Response("no user founnd", { status: 400 });
 
         if (user === sess.user.id) return new Response("can't add urself as a friend", { status: 400 });
 
         const alrSent = await fetchRedis("sismember", `user:${user}:friend_requests`, sess.user.id) as 0 | 1;
         const alrAdded = await fetchRedis("sismember", `user:${user}:friends`, sess.user.id) as 0 | 1;
 
-        if (alrSent) return new Response("already sent", { status: 200 });
-        if (alrAdded) return new Response("already added", { status: 200 })
-        console.log(user.result);
+        if (alrSent) return new Response("already sent", { status: 400 });
+        if (alrAdded) return new Response("already added", { status: 400 })
 
-        db.sadd(`user:${user.result}:friend_requests`, sess.user.id)
+        db.sadd(`user:${user}:friend_requests`, sess.user.id)
 
         return new Response("email", { status: 200 })
     } catch (error) {
-        console.log(error + "}}}}}}}}}");
         handleError(error)
     }
 }

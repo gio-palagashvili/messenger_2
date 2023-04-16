@@ -1,4 +1,3 @@
-
 const getENV = () => {
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -19,7 +18,6 @@ export const fetchRedis = async (command: Command, ...args: (string | number)[])
             Authorization: `Bearer ${getENV().token}`
         }, cache: "no-store"
     });
-
     if (!res.ok) throw new Error(`redis error ${res.statusText}}`);
 
     const data = await res.json();

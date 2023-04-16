@@ -33,7 +33,6 @@ export const authOptions: NextAuthOptions = {
             if (checkUser) {
                 return { id: checkUser.id, name: checkUser.name, email: checkUser.email }
             }
-            // !idk
             token.id = user!.id
             return token;
         },
