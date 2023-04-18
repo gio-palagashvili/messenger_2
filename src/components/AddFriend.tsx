@@ -7,8 +7,6 @@ import { ZodError } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormData } from "@/types/zod";
-import { authOptions } from "@/lib/authOptions";
-import { getServerSession } from "next-auth";
 
 interface AddFriendButtonProps {}
 

@@ -1,9 +1,10 @@
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import Button from "@/components/ui/Button";
+import Toast from "@/components/ui/Toast";
 import SignOutButton from "@/components/SignOutButton";
 interface LayoutProps {
   children: ReactNode;
@@ -11,7 +12,7 @@ interface LayoutProps {
 
 const Layout = async ({ children }: LayoutProps) => {
   const session = await getServerSession(authOptions);
-  if (!session) notFound();
+  if (!session) redirect("/login");
 
   return (
     <div>

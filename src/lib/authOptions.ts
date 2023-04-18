@@ -45,8 +45,8 @@ export const authOptions: NextAuthOptions = {
             }
             return session;
         },
-        redirect() {
-            return "/home"
-        }
+        // redirect({ baseUrl, url }) {
+        //     return "/home"
+        // }
     }
 }

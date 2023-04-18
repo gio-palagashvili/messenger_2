@@ -9,7 +9,7 @@ const page = ({}) => {
   const loginGoogle = async () => {
     setLoading(true);
     try {
-      await signIn("google");
+      await signIn("google", { callbackUrl: "/home" });
     } catch (error) {
       console.log(error);
     } finally {
