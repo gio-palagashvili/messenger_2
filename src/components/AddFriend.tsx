@@ -12,10 +12,16 @@ interface AddFriendButtonProps {}
 
 const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   const [complete, setComplete] = useState<boolean>(false);
-  const { register, handleSubmit, setError, formState, clearErrors } =
-    useForm<FormData>({
-      resolver: zodResolver(validateFriend),
-    });
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting, isLoading },
+    clearErrors,
+  } = useForm<FormData>({
+    resolver: zodResolver(validateFriend),
+  });
 
   const addFriend = async (email: string) => {
     try {
@@ -37,8 +43,8 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       setError("email", { message: "unknown error" });
     }
   };
-  const onSubmit = (data: FormData) => {
-    addFriend(data.email);
+  const onSubmit = async (data: FormData) => {
+    await addFriend(data.email);
   };
 
   return (
@@ -52,9 +58,9 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
         {...register("email")}
         className="bg-transparent border-slate-600 border p-2 outline-none"
       />
-      <p>{formState.errors.email?.message}</p>
+      <p>{errors.email?.message}</p>
       <p>{complete ? "sent friend request" : ""}</p>
-      <Button>Add</Button>
+      <Button isLoading={isSubmitting}>Add</Button>
     </form>
   );
 };

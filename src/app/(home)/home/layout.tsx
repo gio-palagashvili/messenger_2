@@ -16,9 +16,9 @@ const Layout = async ({ children }: LayoutProps) => {
     <div>
       {children}
 
-      <div className="flex gap-10">
+      <div className="flex gap-1 mt-10">
         <Link href={"/home"}>
-          <Button>home</Button>
+          <Button>Home</Button>
         </Link>
         <Link href={"home/add"}>
           <Button>Add a friend</Button>

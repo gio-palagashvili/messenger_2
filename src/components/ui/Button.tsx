@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { ButtonHTMLAttributes, FC } from "react";
 
 export const buttonVariants = cva(
-  "active:scale-95 duration-200 inline-flex items-center justify-center rounded-md text-sm font-medium disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:outline-blue-500",
+  "gap-1 active:scale-95 duration-200 inline-flex items-center justify-center rounded-md text-sm font-medium disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:outline-blue-500",
   {
     variants: {
       variant: {
@@ -60,7 +60,7 @@ const Button: FC<ButtonProps> = ({
           <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
         </svg>
       ) : null}
-      {children}
+      {isLoading ? "loading" : children}
     </button>
   );
 };
