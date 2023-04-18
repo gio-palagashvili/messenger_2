@@ -6,7 +6,6 @@ import { fetchRedis } from "@/app/helpers/redis";
 import { db } from "@/lib/db";
 import { handleError } from "@/app/helpers/errorHanlder";
 
-
 export const POST = async (req: Request, res: NextApiResponse) => {
     try {
         const sess = await getServerSession(authOptions);
@@ -14,7 +13,6 @@ export const POST = async (req: Request, res: NextApiResponse) => {
 
         const body = await req.json();
         const { email } = validateFriend.parse({ email: body.email });
-
 
         const user = await fetchRedis("get", `user:email:${email}`);
 

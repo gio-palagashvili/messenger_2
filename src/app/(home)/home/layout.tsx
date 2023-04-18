@@ -2,8 +2,9 @@ import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { FC, ReactNode } from "react";
+import { ReactNode } from "react";
 import Button from "@/components/ui/Button";
+import SignOutButton from "@/components/SignOutButton";
 interface LayoutProps {
   children: ReactNode;
 }
@@ -15,7 +16,6 @@ const Layout = async ({ children }: LayoutProps) => {
   return (
     <div>
       {children}
-
       <div className="flex gap-1 mt-10">
         <Link href={"/home"}>
           <Button>Home</Button>
@@ -23,6 +23,7 @@ const Layout = async ({ children }: LayoutProps) => {
         <Link href={"home/add"}>
           <Button>Add a friend</Button>
         </Link>
+        <SignOutButton>Sign out</SignOutButton>
       </div>
     </div>
   );
