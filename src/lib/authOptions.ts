@@ -31,22 +31,19 @@ export const authOptions: NextAuthOptions = {
         async jwt({ token, user }) {
             const checkUser = await db.get(`user:${token.id}`) as User | null;
             if (checkUser) {
-                return { id: checkUser.id, name: checkUser.name, email: checkUser.email }
+                return { id: checkUser.id, name: checkUser.name, email: checkUser.email, image: checkUser.image }
             }
             token.id = user!.id
             return token;
         },
         async session({ session, token }) {
             if (token) {
-                session.user.id = token.id;
-                session.user.name = token.name
-                session.user.email = token.email
-                session.user.image = token.picture
+                session.user = { id: token.id, name: token.name, email: token.email, image: token.image as string };
             }
             return session;
         },
-        // redirect({ baseUrl, url }) {
-        //     return "/home"
-        // }
+        redirect({ baseUrl, url }) {
+            return "/home"
+        }
     }
 }
