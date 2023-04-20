@@ -49,20 +49,23 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   };
 
   return (
-    <form
-      className="flex flex-col gap-4 w-full"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <label htmlFor="email">who u adding</label>
-      <input
-        type="text"
-        {...register("email")}
-        className="bg-transparent border-slate-600 border p-2 outline-none"
-      />
-      <p>{errors.email?.message}</p>
-      <p>{complete ? "sent friend request" : ""}</p>
-      <Button isLoading={isSubmitting}>Add</Button>
-    </form>
+    <div className="w-full">
+      <h1 className="text-3xl">Add a friend</h1>
+      <form
+        className="flex flex-col gap-4 w-full"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <label htmlFor="email">who u adding</label>
+        <input
+          type="text"
+          {...register("email")}
+          className="bg-transparent border-slate-600 border p-2 outline-none"
+        />
+        <p>{errors.email?.message}</p>
+        <p>{complete ? "sent friend request" : ""}</p>
+        <Button isLoading={isSubmitting}>Add</Button>
+      </form>
+    </div>
   );
 };
 
