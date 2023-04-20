@@ -3,11 +3,11 @@ import { cva, VariantProps } from "class-variance-authority";
 import { ButtonHTMLAttributes, FC } from "react";
 
 export const buttonVariants = cva(
-  "gap-1 active:scale-95 duration-200 inline-flex items-center justify-center rounded-md text-sm font-medium disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:outline-blue-500",
+  "gap-1 active:scale-95 duration-300 inline-flex items-center justify-center rounded-md text-sm font-medium disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:outline-blue-500",
   {
     variants: {
       variant: {
-        default: "bg-gray-800 text-white hover:bg-gray-900",
+        default: "bg-zinc-900 text-white hover:bg-zinc-700",
         ghost: "bg-transparent hover:text-slate-900 hover:bg-slate-200",
       },
       size: {
@@ -27,11 +27,13 @@ export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   isLoading?: boolean;
+  showLoading?: boolean;
 }
 
 const Button: FC<ButtonProps> = ({
   className,
   children,
+  showLoading = true,
   variant,
   isLoading,
   size,
@@ -59,7 +61,7 @@ const Button: FC<ButtonProps> = ({
           <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
         </svg>
       ) : null}
-      {isLoading ? "loading" : children}
+      {isLoading ? (showLoading ? "loading" : "") : children}
     </button>
   );
 };

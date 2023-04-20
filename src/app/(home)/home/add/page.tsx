@@ -6,7 +6,7 @@ export const metadata = {
 
 const page = ({}) => {
   return (
-    <div className="m-auto flex flex-col place-items-center w-full ">
+    <div className="m-auto flex flex-col place-items-center w-1/3">
       <h1 className="text-3xl">Add a friend</h1>
       <AddFriend />
     </div>

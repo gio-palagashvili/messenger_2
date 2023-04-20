@@ -50,7 +50,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
 
   return (
     <form
-      className="flex flex-col gap-4 w-1/2"
+      className="flex flex-col gap-4 w-full"
       onSubmit={handleSubmit(onSubmit)}
     >
       <label htmlFor="email">who u adding</label>

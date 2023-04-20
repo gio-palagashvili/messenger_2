@@ -24,7 +24,12 @@ const SignOutButton: FC<SignOutButtonProps> = ({ children, ...props }) => {
   };
   return (
     <>
-      <Button onClick={async () => await signOutM()} isLoading={loading}>
+      <Button
+        onClick={async () => await signOutM()}
+        isLoading={loading}
+        variant={"default"}
+        showLoading={false}
+      >
         {children}
       </Button>
       <Toast error={errorToast} variant={"error"} />
