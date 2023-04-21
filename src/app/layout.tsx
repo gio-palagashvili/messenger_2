@@ -2,7 +2,7 @@ import Provider from "@/components/Provider";
 import "./globals.css";
 
 export const metadata = {
-  title: "Next messenger App",
+  title: "Messenger",
   description: "nextjs messenger app",
 };
 
