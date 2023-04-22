@@ -14,7 +14,7 @@ interface NavProps {
 
 const Nav: FC<NavProps> = ({ session }) => {
   return (
-    <div className="hidden w-[300px] h-full bg-zinc-800 md:flex justify-center flex-col place-items-center ">
+    <div className="hidden w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center ">
       <div className="h-[90%] w-full p-3">
         <div className="flex gap-1 justify-center">
           <Link href={"/home"}>

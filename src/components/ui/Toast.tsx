@@ -1,16 +1,23 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
-import { FC, HTMLAttributes, ReactNode } from "react";
+import {
+  Dispatch,
+  FC,
+  HTMLAttributes,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { motion } from "framer-motion";
-import { twMerge } from "tailwind-merge";
 
 export const toastVariant = cva(
-  "absolute flex h-12 w-[400px] rounded-md right-4 bottom-3 p-3 gap-2 text-black capitalize justify-content-center place-items-center",
+  "alert shadow-lg absolute w-1/3 right-4 bottom-3 p-4 gap-2 text-black capitalize text-left ",
   {
     variants: {
       variant: {
-        error: "bg-red-400",
+        error: "bg-red-main",
         success: "bg-green-400",
       },
       size: {},
@@ -20,20 +27,18 @@ export const toastVariant = cva(
     },
   }
 );
-
 export interface ToastProps
   extends HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof toastVariant> {
-  shown?: boolean;
   icon?: ReactNode;
   children?: ReactNode;
   error: ToastError | undefined;
+  setShouldShow: Dispatch<SetStateAction<boolean>>;
 }
 
 const Toast: FC<ToastProps> = ({
   className,
   children,
-  shown,
   variant,
   error,
   size,
@@ -50,27 +55,26 @@ const Toast: FC<ToastProps> = ({
           className={cn(toastVariant({ variant, size, className }))}
           {...props}
         >
-          {variant == "error" ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="black"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              className="lucide lucide-ban"
-              data-darkreader-inline-stroke=""
-            >
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="4.93" x2="19.07" y1="4.93" y2="19.07"></line>
-            </svg>
-          ) : (
-            props.icon
-          )}
-          {error.text}
+          <div>
+            {variant == "error" ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current flex-shrink-0 h-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            ) : (
+              props.icon
+            )}
+            <span>Error! {error.text}</span>
+          </div>
         </div>
       ) : null}
     </motion.div>

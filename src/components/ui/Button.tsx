@@ -7,7 +7,7 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-zinc-900 text-white hover:bg-zinc-700",
+        default: "btn text-white capitalize",
         ghost: "bg-transparent hover:text-slate-900 hover:bg-slate-200",
       },
       size: {
