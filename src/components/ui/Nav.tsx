@@ -7,6 +7,7 @@ import Link from "next/link";
 import { BiLogOut } from "react-icons/bi";
 import { BsFillChatFill, BsPersonPlusFill } from "react-icons/bs";
 import { FaUserFriends } from "react-icons/fa";
+
 interface NavProps {
   session: Session;
 }

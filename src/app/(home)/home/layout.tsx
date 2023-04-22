@@ -3,12 +3,17 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import Nav from "@/components/ui/Nav";
+
 interface LayoutProps {
   children: ReactNode;
 }
 export const metadata = {
   title: "Messenger",
   description: "messenger app main page",
+  // todo
+  icons: {
+    icon: "../../../../public/favicon/android-chrome-192x192.png",
+  },
 };
 
 const Layout = async ({ children }: LayoutProps) => {
