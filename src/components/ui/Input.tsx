@@ -1,12 +1,12 @@
-import { FC, InputHTMLAttributes } from "react";
+import { FC, InputHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
 export const inputVariants = cva("", {
   variants: {
     variant: {
-      default: "bg-zinc-900 text-white hover:bg-zinc-700",
-      ghost: "bg-transparent hover:text-slate-900 hover:bg-slate-200",
+      default: "input w-full bg-base-200",
+      ghost: "input input-ghost",
     },
   },
   defaultVariants: {
@@ -21,21 +21,22 @@ interface InputProps
   showLoading?: boolean;
 }
 
-const Input: FC<InputProps> = ({
-  className,
-  children,
-  showLoading = true,
-  variant,
-  isLoading,
-  ...props
-}) => {
-  return (
-    <input
-      className={cn(inputVariants({ variant, className }))}
-      disabled={isLoading}
-      {...props}
-    />
-  );
-};
+const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
+  (
+    { className, children, showLoading = true, variant, isLoading, ...props },
+    ref
+  ) => {
+    return (
+      <input
+        className={cn(inputVariants({ variant, className }))}
+        disabled={isLoading}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+
+Input.displayName = "Input";
 
 export default Input;

@@ -24,7 +24,7 @@ const page = ({}) => {
 
   return (
     <div className="w-full h-full flex justify-center place-items-center">
-      <div className="w-96 flex place-items-center flex-col gap-5 p-12 bg-zinc-800 rounded-md h-[500px] justify-center">
+      <div className="w-96 flex place-items-center flex-col gap-5 p-12 h-[500px] justify-center">
         <div className="h-16 w-16">
           <Image src={logo} alt="logo" referrerPolicy="no-referrer" />
         </div>

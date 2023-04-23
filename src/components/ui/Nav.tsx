@@ -43,6 +43,7 @@ const Nav: FC<NavProps> = ({ session }) => {
             className="rounded-full"
             placeholder="empty"
             fill={true}
+            sizes="0"
             src={session.user.image as string}
             alt="Your profile picture"
           />
