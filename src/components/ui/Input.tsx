@@ -2,11 +2,11 @@ import { FC, InputHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-export const inputVariants = cva("", {
+export const inputVariants = cva("input", {
   variants: {
     variant: {
-      default: "input w-full bg-base-200",
-      ghost: "input input-ghost",
+      default: "w-full bg-base-200",
+      ghost: "input-ghost",
     },
   },
   defaultVariants: {
@@ -29,7 +29,7 @@ const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         className={cn(inputVariants({ variant, className }))}
-        disabled={isLoading}
+        disabled={isLoading && showLoading}
         ref={ref}
         {...props}
       />

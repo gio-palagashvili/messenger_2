@@ -12,7 +12,7 @@ const SignOutButton: FC<SignOutButtonProps> = ({ children, ...props }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [errorToast, setErrorToast] = useState<ToastError>();
 
-  const signOutM = async () => {
+  const signOutImplement = async () => {
     try {
       setLoading(true);
       await signOut({ callbackUrl: "/login" });
@@ -25,14 +25,15 @@ const SignOutButton: FC<SignOutButtonProps> = ({ children, ...props }) => {
   return (
     <>
       <Button
-        onClick={async () => await signOutM()}
+        onClick={async () => await signOutImplement()}
         isLoading={loading}
         variant={"default"}
+        className="aspect-square"
         showLoading={false}
       >
         {children}
       </Button>
-      <Toast error={errorToast} variant={"error"} />
+      {errorToast ? <Toast error={errorToast} variant={"error"} /> : null}
     </>
   );
 };

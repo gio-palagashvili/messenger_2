@@ -1,4 +1,4 @@
-import { Session } from "next-auth";
+import { Session, getServerSession } from "next-auth";
 import Image from "next/image";
 import { FC } from "react";
 import Button from "@/components/ui/Button";
@@ -6,13 +6,14 @@ import SignOutButton from "@/components/SignOutButton";
 import Link from "next/link";
 import { BiLogOut } from "react-icons/bi";
 import { BsFillChatFill, BsPersonPlusFill } from "react-icons/bs";
-import { FaUserFriends } from "react-icons/fa";
+import FriendRequests from "./FriendRequests";
 
 interface NavProps {
   session: Session;
+  initialReqsCount: number;
 }
 
-const Nav: FC<NavProps> = ({ session }) => {
+const Nav: FC<NavProps> = ({ session, initialReqsCount }) => {
   return (
     <div className="hidden w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center ">
       <div className="h-[90%] w-full p-3">
@@ -23,11 +24,11 @@ const Nav: FC<NavProps> = ({ session }) => {
               chat
             </Button>
           </Link>
-          <Link href={"home/requets"}>
-            <Button>
-              <FaUserFriends size={15} />
-              requests
-            </Button>
+          <Link href={"home/requests"}>
+            <FriendRequests
+              sessionId={session.user.id}
+              initialReqsCount={initialReqsCount}
+            />
           </Link>
           <Link href={"home/add"}>
             <Button>
@@ -43,7 +44,7 @@ const Nav: FC<NavProps> = ({ session }) => {
             className="rounded-full"
             placeholder="empty"
             fill={true}
-            sizes="0"
+            sizes="2.25rem"
             src={session.user.image as string}
             alt="Your profile picture"
           />

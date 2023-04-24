@@ -3,26 +3,35 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import Nav from "@/components/ui/Nav";
+import { fetchRedis } from "@/app/helpers/redis";
 
-interface LayoutProps {
-  children: ReactNode;
-}
 export const metadata = {
   title: "Messenger",
   description: "messenger app main page",
   // todo
   icons: {
-    icon: "../../../../public/favicon/android-chrome-192x192.png",
+    icon: "../../../../public/favicon/favicon.ico",
   },
 };
+
+interface LayoutProps {
+  children: ReactNode;
+}
 
 const Layout = async ({ children }: LayoutProps) => {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/login");
 
+  const initialReqsCount = (
+    (await fetchRedis(
+      "smembers",
+      `user:${session.user.id}:friend_requests`
+    )) as User[]
+  ).length;
+
   return (
     <div className="w-full h-full flex">
-      <Nav session={session} />
+      <Nav session={session} initialReqsCount={initialReqsCount} />
       {children}
     </div>
   );
