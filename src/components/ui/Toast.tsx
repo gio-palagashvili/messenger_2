@@ -5,7 +5,7 @@ import { FC, HTMLAttributes, ReactNode, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 export const toastVariant = cva(
-  "alert shadow-lg absolute w-1/3 right-4 bottom-3 p-4 gap-2 text-black capitalize text-left ",
+  "alert shadow-lg absolute w-1/2 md:w-1/3 lg:w-1/4 right-4 bottom-3 p-4 gap-2 text-black capitalize text-left",
   {
     variants: {
       variant: {

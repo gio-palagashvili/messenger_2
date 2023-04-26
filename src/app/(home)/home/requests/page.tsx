@@ -17,8 +17,8 @@ const page = async ({}) => {
 
   return (
     <div className="w-[60%] m-auto h-[80%]">
-      <h1 className="text-3xl">Friend requests</h1>
-      <div>
+      <h1 className="text-3xl">Friend requests :</h1>
+      <div className="mt-2">
         <RequestsList
           sessionId={session.user.id}
           incomingRequests={userNames}
