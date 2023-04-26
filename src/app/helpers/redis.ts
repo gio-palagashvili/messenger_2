@@ -24,3 +24,12 @@ export const fetchRedis = async (command: Command, ...args: (string | number)[])
 
     return data.result;
 }
+export const getUsersById = async (ids: string[]) => {
+    const res = await Promise.all(
+        ids.map(async (id) => {
+            const sender = JSON.parse(await fetchRedis("get", `user:${id}`) as string) as User
+            return { senderId: sender.id, senderEmail: sender.email }
+        })
+    )
+    return res;
+}

@@ -6,7 +6,7 @@ import SignOutButton from "@/components/SignOutButton";
 import Link from "next/link";
 import { BiLogOut } from "react-icons/bi";
 import { BsFillChatFill, BsPersonPlusFill } from "react-icons/bs";
-import FriendRequests from "./FriendRequests";
+import FriendRequestsButton from "@/components/ui/FriendRequestsButton";
 
 interface NavProps {
   session: Session;
@@ -15,7 +15,7 @@ interface NavProps {
 
 const Nav: FC<NavProps> = ({ session, initialReqsCount }) => {
   return (
-    <div className="hidden w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center ">
+    <div className="hidden min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center ">
       <div className="h-[90%] w-full p-3">
         <div className="flex gap-1 justify-center">
           <Link href={"/home"}>
@@ -25,7 +25,7 @@ const Nav: FC<NavProps> = ({ session, initialReqsCount }) => {
             </Button>
           </Link>
           <Link href={"home/requests"}>
-            <FriendRequests
+            <FriendRequestsButton
               sessionId={session.user.id}
               initialReqsCount={initialReqsCount}
             />

@@ -8,7 +8,7 @@ interface FriendRequestsProps {
   sessionId: string;
 }
 
-const FriendRequests: FC<FriendRequestsProps> = ({
+const FriendRequestsButton: FC<FriendRequestsProps> = ({
   initialReqsCount,
   sessionId,
 }) => {
@@ -16,8 +16,14 @@ const FriendRequests: FC<FriendRequestsProps> = ({
 
   return (
     <div className="indicator">
-      <span className="indicator-item indicator-top badge bg-red-main text-stone-900 font-bold text-xs">
-        {reqs}
+      <span
+        className={
+          reqs > 0
+            ? "indicator-item indicator-top badge bg-red-main text-stone-900 font-bold text-xs"
+            : ""
+        }
+      >
+        {reqs || ""}
       </span>
       <Button>
         <FaUserFriends size={15} />
@@ -27,4 +33,4 @@ const FriendRequests: FC<FriendRequestsProps> = ({
   );
 };
 
-export default FriendRequests;
+export default FriendRequestsButton;
