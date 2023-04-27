@@ -27,7 +27,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
     setComplete(false);
     try {
       validateFriend.parse({ email });
-      await axios.post("/api/friends/add", {
+      await axios.post("/api/friends/request", {
         email: email,
       });
 

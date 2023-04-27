@@ -8,10 +8,6 @@ import { fetchRedis } from "@/app/helpers/redis";
 export const metadata = {
   title: "Messenger",
   description: "messenger app main page",
-  // todo
-  icons: {
-    icon: "../../../../public/favicon/favicon.ico",
-  },
 };
 
 interface LayoutProps {

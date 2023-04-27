@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { FC, useState } from "react";
 import Button from "@/components/ui/Button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface RequestsListProps {
   incomingRequests: IncomingRequest[];
@@ -13,6 +15,33 @@ const RequestsList: FC<RequestsListProps> = ({
   sessionId,
 }) => {
   const [incoming, setIncoming] = useState<IncomingRequest[]>(incomingRequests);
+  const nav = useRouter();
+
+  const acceptFriend = async (senderId: string) => {
+    axios
+      .post("/api/friends/accept", { id: senderId })
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        // setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
+        // nav.refresh();
+      });
+  };
+
+  const rejectFriend = async (senderId: string) => {
+    axios
+      .post("/api/friends/reject", { id: senderId })
+      .then(() => {})
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
+        nav.refresh();
+      });
+  };
 
   return (
     <div className="flex flex-col gap-2 pt-2 overflow-y-scroll">
@@ -39,8 +68,17 @@ const RequestsList: FC<RequestsListProps> = ({
                 </div>
               </div>
               <div className="flex gap-1">
-                <Button className="text-xs">Accept</Button>
-                <Button variant={"ghost"} className="text-xs">
+                <Button
+                  className="text-xs"
+                  onClick={() => acceptFriend(req.senderId)}
+                >
+                  Accept
+                </Button>
+                <Button
+                  onClick={() => rejectFriend(req.senderId)}
+                  variant={"ghostUnderline"}
+                  className="text-xs"
+                >
                   Decline
                 </Button>
               </div>

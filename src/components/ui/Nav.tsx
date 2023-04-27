@@ -37,7 +37,7 @@ const Nav: FC<NavProps> = ({ session, initialReqsCount }) => {
           </Link>
         </div>
       </div>
-      <div className="flex gap-2 text-sm font-semibold">
+      <div className="flex gap-2 text-sm font-semibold justify-center place-items-center">
         <div className="relative h-9 w-9">
           <Image
             referrerPolicy="no-referrer"
@@ -49,7 +49,7 @@ const Nav: FC<NavProps> = ({ session, initialReqsCount }) => {
             alt="Your profile picture"
           />
         </div>
-        <div className="flex gap-10">
+        <div className="flex gap-10 justify-center place-items-center">
           <div className="flex flex-col">
             <span aria-hidden="true" className="text-white">
               {session.user.name}

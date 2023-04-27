@@ -2,6 +2,7 @@
 import { FC, useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import Button from "./Button";
+import axios from "axios";
 
 interface FriendRequestsProps {
   initialReqsCount: number;
