@@ -24,7 +24,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         const alrAdded = await fetchRedis("sismember", `user:${user}:friends`, sess.user.id) as 0 | 1;
 
         if (alrSent) return new Response("already sent", { status: 400 });
-        if (alrAdded) return new Response("already added", { status: 400 })
+        if (alrAdded) return new Response("already friends", { status: 400 })
 
         db.sadd(`user:${user}:friend_requests`, sess.user.id)
 

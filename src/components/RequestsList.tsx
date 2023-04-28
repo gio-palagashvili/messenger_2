@@ -4,7 +4,6 @@ import { FC, useState } from "react";
 import Button from "@/components/ui/Button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Toast from "./ui/Toast";
 import HandleToast from "./HandleToast";
 
 interface RequestsListProps {
@@ -27,28 +26,29 @@ const RequestsList: FC<RequestsListProps> = ({
     axios
       .post("/api/friends/accept", { id: senderId })
       .then((d) => {
-        setComplete("Added a friend");
+        setComplete(d.data);
         setError(null);
       })
       .catch((err) => {
         setError(err.response.data);
       })
       .finally(() => {
-        // setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
-        // nav.refresh();
+        setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
       });
   };
 
   const rejectFriend = async (senderId: string) => {
     axios
       .post("/api/friends/reject", { id: senderId })
-      .then(() => {})
+      .then((d) => {
+        setComplete(d.data);
+        setError(null);
+      })
       .catch((err) => {
-        console.log(err);
+        setError(err.response.data);
       })
       .finally(() => {
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
-        nav.refresh();
       });
   };
 
