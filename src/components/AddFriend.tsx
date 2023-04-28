@@ -71,9 +71,10 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
               <Button isLoading={isSubmitting}>Add</Button>
             </div>
           </div>
+          {/* todo */}
           {errors.email ? (
             <Toast
-              error={{ error: "id", text: `${errors.email?.message}` }}
+              error={{ text: `${errors.email?.message}` }}
               variant={"error"}
             />
           ) : null}

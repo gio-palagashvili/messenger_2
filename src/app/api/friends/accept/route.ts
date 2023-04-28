@@ -1,6 +1,7 @@
 import { handleError } from "@/app/helpers/errorHanlder";
 import { fetchRedis } from "@/app/helpers/redis";
 import { authOptions } from "@/lib/authOptions";
+import { db } from "@/lib/db";
 import { NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
@@ -16,10 +17,13 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         if (await fetchRedis("sismember", `user:${sess.user.id}:friends`, idToAdd)) return new Response('already friends', { status: 400 });
         if (!await fetchRedis("sismember", `user:${sess.user.id}:friend_requests`, idToAdd) as boolean) return new Response('invalid', { status: 400 })
 
-        return new Response("succ", { status: 200 });
-    } catch (error) {
-        console.log(error);
+        await db.sadd(`user:${sess.user.id}:friends`, idToAdd);
+        await db.sadd(`user:${idToAdd}:friends`, sess.user.id);
 
+        db.srem(`user:${sess.user.id}:friend_requests`, idToAdd);
+
+        return new Response("Successfully added a friend", { status: 200 });
+    } catch (error) {
         handleError(error);
     }
 }

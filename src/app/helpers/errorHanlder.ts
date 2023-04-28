@@ -6,7 +6,7 @@ export const handleError = (error: any) => {
         return new Response(error.message, { status: 400 });
     }
     if (error instanceof AxiosError) {
-        return new Response('invalid req axios', { status: 400 });
+        return new Response(error.message, { status: 400 });
     }
     return new Response(error.message, { status: 400 });
 }

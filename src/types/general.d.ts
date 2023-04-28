@@ -1,4 +1,6 @@
 interface ToastError {
-    error: string
     text: string
+}
+interface ToastComplete {
+    text: string;
 }
