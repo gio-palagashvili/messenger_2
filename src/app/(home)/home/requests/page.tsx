@@ -13,7 +13,9 @@ const page = async ({}) => {
     "smembers",
     `user:${session.user.id}:friend_requests`
   )) as string[];
-  const userNames = await getUsersById(reqsIds);
+  const userNames: IncomingRequest[] = (await getUsersById(
+    reqsIds
+  )) as IncomingRequest[];
 
   return (
     <div className="w-[60%] m-auto h-[80%]">

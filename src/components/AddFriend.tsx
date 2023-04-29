@@ -30,11 +30,10 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       await axios.post("/api/friends/request", {
         email: email,
       });
-
+      clearErrors("email");
       setComplete(true);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        // ??
         setError("email", { message: "invalid email" });
         clearErrors("email");
         return;
@@ -51,7 +50,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   };
 
   return (
-    <div className="w-full flex flex-col place-items-center justify-center">
+    <div className="w-full flex flex-col place-items-center">
       <div className="w-[90%] flex flex-col gap-3 lg:w-[60%]">
         <h1 className="text-4xl bold ml-[0.20rem]">Add a friend</h1>
         <form
@@ -68,7 +67,9 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
                 {...register("email")}
                 placeholder="gio@gmail.com"
               />
-              <Button isLoading={isSubmitting}>Add</Button>
+              <Button isLoading={isSubmitting} showLoading={false}>
+                Add
+              </Button>
             </div>
           </div>
           {/* todo */}

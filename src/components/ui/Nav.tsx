@@ -1,24 +1,28 @@
-import { Session, getServerSession } from "next-auth";
+import { Session } from "next-auth";
 import Image from "next/image";
-import { FC } from "react";
 import Button from "@/components/ui/Button";
 import SignOutButton from "@/components/SignOutButton";
 import Link from "next/link";
 import { BiLogOut } from "react-icons/bi";
 import { BsFillChatFill, BsPersonPlusFill } from "react-icons/bs";
 import FriendRequestsButton from "@/components/ui/FriendRequestsButton";
+import { getUserFriendsById } from "@/app/helpers/redis";
+import { authOptions } from "@/lib/authOptions";
+import { redirect } from "next/dist/server/api-utils";
 
 interface NavProps {
   session: Session;
   initialReqsCount: number;
 }
 
-const Nav: FC<NavProps> = ({ session, initialReqsCount }) => {
+const Nav = async ({ session, initialReqsCount }: NavProps) => {
+  // const friends = getUserFriendsById();
+
   return (
     <div className="hidden min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center ">
-      <div className="h-[90%] w-full p-3">
+      <div className="h-[10%] w-full p-3">
         <div className="flex gap-1 justify-center">
-          <Link href={"/home"}>
+          <Link href={"home"}>
             <Button>
               <BsFillChatFill size={15} />
               chat
@@ -37,6 +41,7 @@ const Nav: FC<NavProps> = ({ session, initialReqsCount }) => {
           </Link>
         </div>
       </div>
+      <div className="h-[80%] w-full overflow-y-scroll p-4"></div>
       <div className="flex gap-2 text-sm font-semibold justify-center place-items-center">
         <div className="relative h-9 w-9">
           <Image
