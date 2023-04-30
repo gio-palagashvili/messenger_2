@@ -19,10 +19,12 @@ const RequestsList: FC<RequestsListProps> = ({
 
   const [error, setError] = useState<ToastError | null>(null);
   const [complete, setComplete] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const nav = useRouter();
 
   const acceptFriend = async (senderId: string) => {
+    setLoading(true);
     axios
       .post("/api/friends/accept", { id: senderId })
       .then((d) => {
@@ -33,11 +35,13 @@ const RequestsList: FC<RequestsListProps> = ({
         setError(err.response.data);
       })
       .finally(() => {
+        setLoading(false);
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
       });
   };
 
   const rejectFriend = async (senderId: string) => {
+    setLoading(true);
     axios
       .post("/api/friends/reject", { id: senderId })
       .then((d) => {
@@ -48,6 +52,7 @@ const RequestsList: FC<RequestsListProps> = ({
         setError(err.response.data);
       })
       .finally(() => {
+        setLoading(false);
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
       });
   };
@@ -80,6 +85,8 @@ const RequestsList: FC<RequestsListProps> = ({
                 <div className="flex gap-1">
                   <Button
                     className="text-xs"
+                    isLoading={loading}
+                    showLoading={false}
                     onClick={() => acceptFriend(req.senderId)}
                   >
                     Accept
@@ -87,6 +94,8 @@ const RequestsList: FC<RequestsListProps> = ({
                   <Button
                     onClick={() => rejectFriend(req.senderId)}
                     variant={"ghostUnderline"}
+                    isLoading={loading}
+                    showLoading={false}
                     className="text-xs"
                   >
                     Decline
@@ -96,7 +105,7 @@ const RequestsList: FC<RequestsListProps> = ({
             );
           })
         ) : (
-          <p>No Friend requests yet.</p>
+          <p className="text-zinc-400">Nothing to show here.</p>
         )}
       </div>
       <HandleToast complete={complete} error={error} />

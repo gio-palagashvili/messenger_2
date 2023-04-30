@@ -7,8 +7,8 @@ import { BiLogOut } from "react-icons/bi";
 import { BsFillChatFill, BsPersonPlusFill } from "react-icons/bs";
 import FriendRequestsButton from "@/components/ui/FriendRequestsButton";
 import { getUserFriendsById } from "@/app/helpers/redis";
-import { authOptions } from "@/lib/authOptions";
-import { redirect } from "next/dist/server/api-utils";
+import { FaUserSlash } from "react-icons/fa";
+import ChatList from "@/components/ChatList";
 
 interface NavProps {
   session: Session;
@@ -16,7 +16,7 @@ interface NavProps {
 }
 
 const Nav = async ({ session, initialReqsCount }: NavProps) => {
-  // const friends = getUserFriendsById();
+  const friends = await getUserFriendsById(session.user.id);
 
   return (
     <div className="hidden min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center ">
@@ -41,7 +41,7 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
           </Link>
         </div>
       </div>
-      <div className="h-[80%] w-full overflow-y-scroll p-4"></div>
+      <ChatList friends={friends} session={session} />
       <div className="flex gap-2 text-sm font-semibold justify-center place-items-center">
         <div className="relative h-9 w-9">
           <Image
