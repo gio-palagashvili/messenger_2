@@ -1,5 +1,5 @@
 "use client";
-import { chatHref } from "@/lib/utils";
+import { chatIdConstructor } from "@/lib/utils";
 import { Session } from "next-auth";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -30,10 +30,12 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
           const unSeenMess = unseen.filter((unseenMsg) => {
             return unseenMsg.senderId === friend.id;
           }).length;
-
           return (
             <a
-              href={`/home/chat/${chatHref(session.user.id, friend.id)}`}
+              href={`/home/chat/${chatIdConstructor(
+                session.user.id,
+                friend.id
+              )}`}
               key={friend.id}
             >
               <div className="flex gap-[0.4rem]">
@@ -48,9 +50,12 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                     alt="friend profile picture"
                   />
                 </div>
-                <div className="flex flex-col">
-                  <span aria-hidden="true" className="text-white text-[1rem]">
-                    {friend.name}
+                <div className="flex flex-col w-[70%]">
+                  <span
+                    aria-hidden="true"
+                    className="text-white text-[1rem] flex justify-between w-full"
+                  >
+                    <span>{friend.name}</span>
                   </span>
                   <span
                     className="text-[0.80rem] text-zinc-400 mt-[-4px] ml-[2px]"
@@ -59,9 +64,17 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                     whats up · 12:21 PM
                   </span>
                 </div>
-                <span className="flex place-items-center justify-center ml-auto">
-                  {/* <FaUserSlash className="mt-2" size={13} /> */}
-                </span>
+                <div className="flex justify-center place-items-center">
+                  <span
+                    className={
+                      unSeenMess == 0
+                        ? "text-xs h-5 w-5 bg-red-500 rounded-full flex justify-center place-items-center"
+                        : "text-xs h-5 w-5"
+                    }
+                  >
+                    {unSeenMess == 0 ? unSeenMess : ""}
+                  </span>
+                </div>
               </div>
             </a>
           );
