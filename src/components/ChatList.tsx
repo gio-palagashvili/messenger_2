@@ -4,7 +4,6 @@ import { Session } from "next-auth";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
-import { FaUserSlash } from "react-icons/fa";
 
 interface ChatListProps {
   friends: User[];
@@ -67,12 +66,12 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                 <div className="flex justify-center place-items-center">
                   <span
                     className={
-                      unSeenMess == 0
+                      unSeenMess > 0
                         ? "text-xs h-5 w-5 bg-red-500 rounded-full flex justify-center place-items-center"
                         : "text-xs h-5 w-5"
                     }
                   >
-                    {unSeenMess == 0 ? unSeenMess : ""}
+                    {unSeenMess > 0 ? unSeenMess : ""}
                   </span>
                 </div>
               </div>

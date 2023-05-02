@@ -7,7 +7,6 @@ import { BiLogOut } from "react-icons/bi";
 import { BsFillChatFill, BsPersonPlusFill } from "react-icons/bs";
 import FriendRequestsButton from "@/components/ui/FriendRequestsButton";
 import { getUserFriendsById } from "@/app/helpers/redis";
-import { FaUserSlash } from "react-icons/fa";
 import ChatList from "@/components/ChatList";
 
 interface NavProps {
