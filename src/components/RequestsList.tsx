@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import HandleToast from "./HandleToast";
+import { twMerge } from "tailwind-merge";
 
 interface RequestsListProps {
   incomingRequests: IncomingRequest[];
@@ -19,12 +20,10 @@ const RequestsList: FC<RequestsListProps> = ({
 
   const [error, setError] = useState<ToastError | null>(null);
   const [complete, setComplete] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<Loading>({ isLoading: false });
 
-  const nav = useRouter();
-
-  const acceptFriend = async (senderId: string) => {
-    setLoading(true);
+  const acceptFriend = async (senderId: string, index: number) => {
+    setLoading({ isLoading: true, index: index });
     axios
       .post("/api/friends/accept", { id: senderId })
       .then((d) => {
@@ -32,16 +31,16 @@ const RequestsList: FC<RequestsListProps> = ({
         setError(null);
       })
       .catch((err) => {
-        setError(err.response.data);
+        setError({ text: err.response.data, index: index });
       })
       .finally(() => {
-        setLoading(false);
+        setLoading({ isLoading: false, index: index });
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
       });
   };
 
-  const rejectFriend = async (senderId: string) => {
-    setLoading(true);
+  const rejectFriend = async (senderId: string, index: number) => {
+    setLoading({ isLoading: true, index: index });
     axios
       .post("/api/friends/reject", { id: senderId })
       .then((d) => {
@@ -52,7 +51,7 @@ const RequestsList: FC<RequestsListProps> = ({
         setError(err.response.data);
       })
       .finally(() => {
-        setLoading(false);
+        setLoading({ isLoading: false, index: index });
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
       });
   };
@@ -62,11 +61,12 @@ const RequestsList: FC<RequestsListProps> = ({
       <div className="flex flex-col gap-2 pt-2 overflow-y-scroll">
         {incoming.length > 0 ? (
           incoming.map((req, index) => {
+            const style = twMerge(
+              "bg-off p-4 rounded-xl flex justify-between drop-shadow",
+              index == loading.index ? "animate-pulse" : ""
+            );
             return (
-              <div
-                key={index}
-                className="bg-off p-4 rounded-xl flex justify-between drop-shadow"
-              >
+              <div key={index} className={style}>
                 <div className="flex gap-2 justify-center place-items-center">
                   <div className="h-9 w-9 relative">
                     <Image
@@ -85,17 +85,13 @@ const RequestsList: FC<RequestsListProps> = ({
                 <div className="flex gap-1">
                   <Button
                     className="text-xs"
-                    isLoading={loading}
-                    showLoading={false}
-                    onClick={() => acceptFriend(req.senderId)}
+                    onClick={() => acceptFriend(req.senderId, index)}
                   >
                     Accept
                   </Button>
                   <Button
-                    onClick={() => rejectFriend(req.senderId)}
+                    onClick={() => rejectFriend(req.senderId, index)}
                     variant={"ghostUnderline"}
-                    isLoading={loading}
-                    showLoading={false}
                     className="text-xs"
                   >
                     Decline

@@ -13,19 +13,17 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
   const removeFriend = (chatPartnerId: string) => {
     axios
       .post("/api/friends/remove", { id: chatPartnerId })
-      .then((data) => {
-        console.log(data);
+      .then(() => {
+        window.location.reload();
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   };
 
   return (
     <div className="w-full h-16 flex pl-3">
       <div className="flex w-full">
         <div className="flex gap-2 text-sm font-semibold place-items-center w-full">
-          <div className="relative h-11 w-11">
+          <div className="relative h-10 w-10">
             <Image
               referrerPolicy="no-referrer"
               className="rounded-full"
@@ -41,7 +39,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
               <span aria-hidden="true" className="text-white text-md">
                 {chatPartnerData.name}
               </span>
-              <span className="text-sm text-zinc-400" aria-hidden="true">
+              <span className="text-xs text-zinc-400" aria-hidden="true">
                 {chatPartnerData.email}
               </span>
             </div>
@@ -50,7 +48,6 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
         <div className="flex place-items-center">
           <Button
             className="mr-6 text-[0.80rem]"
-            variant={"default"}
             size={"default"}
             onClick={() => removeFriend(chatPartnerData.id)}
           >

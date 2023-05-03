@@ -59,7 +59,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
         >
           <div className="flex flex-col gap-2 w-full">
             <label htmlFor="email" className="ml-1">
-              Enter an email
+              Email
             </label>
             <div className="flex gap-3 w-full">
               <Input
@@ -72,7 +72,6 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
               </Button>
             </div>
           </div>
-          {/* todo */}
           {errors.email ? (
             <Toast
               error={{ text: `${errors.email?.message}` }}

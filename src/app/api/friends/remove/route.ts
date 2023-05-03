@@ -7,7 +7,6 @@ import { getServerSession } from 'next-auth';
 
 export const POST = async (req: Request, res: NextApiResponse) => {
     try {
-        // todo
         const sess = await getServerSession(authOptions);
         if (!sess) return res.status(401).json({ message: "not authorized" })
 
@@ -15,8 +14,10 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         const { id } = body;
 
         if (!id) return new Response("invalid id", { status: 400 });
-        // if (!await fetchRedis("get", `user:${id}`)) return new Response("No user found", { status: 404 });
+        if (!await fetchRedis("get", `user:${id}`)) return new Response("No user found", { status: 404 });
+
         db.srem(`user:${sess.user.id}:friends`, id);
+        db.srem(`user:${id}:friends`, sess.user.id);
 
         return new Response("", { status: 200 })
     } catch (error) {

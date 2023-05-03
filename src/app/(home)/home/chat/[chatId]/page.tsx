@@ -36,6 +36,7 @@ const page = async ({ params }: pageProps) => {
   const [userId1, userId2] = chatId.split("--");
 
   if (user.id !== userId1 && user.id !== userId2) notFound();
+  //todo  add chat-notFound()
 
   const chatPartnerId = user.id === userId1 ? userId2 : userId1;
   const chatPartnerData = JSON.parse(

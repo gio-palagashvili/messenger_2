@@ -14,6 +14,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
   const [unseen, setUnseen] = useState<Message[]>([]);
   const router = useRouter();
   const pathname = usePathname();
+
   useEffect(() => {
     if (pathname?.includes("home")) {
       setUnseen((prev) => {
@@ -36,6 +37,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                 friend.id
               )}`}
               key={friend.id}
+              className="hover:bg-[#111318] p-3 -mt-5 rounded-md duration-300"
             >
               <div className="flex gap-[0.4rem]">
                 <div className="relative h-11 w-11">
@@ -52,12 +54,12 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                 <div className="flex flex-col w-[70%]">
                   <span
                     aria-hidden="true"
-                    className="text-white text-[1rem] flex justify-between w-full"
+                    className="text-white text-[0.9rem] flex justify-between w-full"
                   >
-                    <span>{friend.name}</span>
+                    <span>{friend.name} </span>
                   </span>
                   <span
-                    className="text-[0.80rem] text-zinc-400 mt-[-4px] ml-[2px]"
+                    className="text-[0.80rem] text-zinc-400 mt-[-2px] ml-[2px]"
                     aria-hidden="true"
                   >
                     whats up · 12:21 PM
@@ -79,7 +81,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
           );
         })
       ) : (
-        <p>You have no friends yet ;(</p>
+        <p className="text-zinc-400">You have no friends yet ;(</p>
       )}
     </div>
   );
