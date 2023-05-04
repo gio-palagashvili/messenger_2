@@ -1,4 +1,6 @@
 import { fetchRedis, getUsersById } from "@/app/helpers/redis";
+import ChatInput from "@/components/ChatInput";
+import Messages from "@/components/Messages";
 import ChatHeader from "@/components/ui/ChatHeader";
 import { authOptions } from "@/lib/authOptions";
 import { messagesValidator } from "@/lib/validators/messages.zod";
@@ -21,6 +23,7 @@ const getChatMessages = async (chatId: string) => {
     const ordered = mess.reverse();
 
     const messages = messagesValidator.parse(ordered);
+    return messages;
   } catch (error) {
     notFound();
   }
@@ -44,11 +47,13 @@ const page = async ({ params }: pageProps) => {
   ) as User;
 
   const initialMessages = await getChatMessages(chatId);
+
   return (
     <div className="w-full h-full">
       <ChatHeader chatPartnerData={chatPartnerData} />
       <div className="divider mt-0 mb-0 h-1"></div>
-      <div></div>
+      <Messages initialMessages={initialMessages} sessionId={sess.user.id} />
+      <ChatInput />
     </div>
   );
 };

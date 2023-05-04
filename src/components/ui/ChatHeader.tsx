@@ -23,7 +23,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
     <div className="w-full h-16 flex pl-3">
       <div className="flex w-full">
         <div className="flex gap-2 text-sm font-semibold place-items-center w-full">
-          <div className="relative h-10 w-10">
+          <div className="relative h-11 w-11">
             <Image
               referrerPolicy="no-referrer"
               className="rounded-full"
