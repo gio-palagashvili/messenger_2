@@ -24,7 +24,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
   }, [pathname]);
 
   return (
-    <div className="h-[80%] max-h-[80%] w-full overflow-y-scroll p-4 flex flex-col gap-3">
+    <div className="h-[80%] max-h-[80%] w-full overflow-y-scroll p-4 flex flex-col mt-1">
       {friends.length > 0 ? (
         friends.sort().map((friend, index) => {
           const unSeenMess = unseen.filter((unseenMsg) => {
@@ -37,7 +37,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                 friend.id
               )}`}
               key={friend.id}
-              className="hover:bg-[#111318] p-3 -mt-5 rounded-md duration-300"
+              className="hover:bg-[#111318] p-3 rounded-lg duration-300 -mt-1"
             >
               <div className="flex gap-[0.4rem]">
                 <div className="relative h-11 w-11">
