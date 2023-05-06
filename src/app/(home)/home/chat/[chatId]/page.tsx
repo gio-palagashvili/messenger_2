@@ -39,9 +39,16 @@ const page = async ({ params }: pageProps) => {
   const [userId1, userId2] = chatId.split("--");
 
   if (user.id !== userId1 && user.id !== userId2) notFound();
-  //todo  add chat-notFound()
 
   const chatPartnerId = user.id === userId1 ? userId2 : userId1;
+  const areFriends = await fetchRedis(
+    "sismember",
+    `user:${sess.user.id}:friends`,
+    chatPartnerId
+  );
+
+  if (!areFriends) notFound();
+
   const chatPartnerData = JSON.parse(
     (await fetchRedis("get", `user:${chatPartnerId}`)) as string
   ) as User;

@@ -5,18 +5,19 @@ import { IoSendSharp } from "react-icons/io5";
 interface ChatInputProps {}
 
 const ChatInput: FC<ChatInputProps> = ({}) => {
-  const sendMessage = () => {};
+  const sendMessage = () => {
+    setInput("");
+  };
   const [input, setInput] = useState<string>("");
   return (
     <div className="w-full h-[10%] flex justify-center gap-2 place-items-center">
       <input
         value={input}
-        type="text"
         placeholder="Aa"
         className="input bg-off w-1/2 font-light"
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key == "Enter" && !e.shiftKey) {
+          if (e.key == "Enter") {
             e.preventDefault();
             sendMessage();
           }

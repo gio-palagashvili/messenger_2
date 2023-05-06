@@ -24,17 +24,18 @@ export const buttonVariants = cva(
     },
   }
 );
-
 export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   isLoading?: boolean;
   showLoading?: boolean;
+  loadingType?: string;
 }
 
 const Button: FC<ButtonProps> = ({
   className,
   children,
+  loadingType,
   showLoading = true,
   variant,
   isLoading,
@@ -43,7 +44,10 @@ const Button: FC<ButtonProps> = ({
 }) => {
   return (
     <button
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(
+        buttonVariants({ variant, size, className }),
+        isLoading ? loadingType : ""
+      )}
       disabled={isLoading}
       {...props}
     >

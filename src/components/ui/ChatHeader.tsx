@@ -1,5 +1,5 @@
 "use client";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import Button from "./Button";
 import Image from "next/image";
@@ -8,20 +8,24 @@ import axios from "axios";
 interface ChatHeaderProps {
   chatPartnerData: User;
 }
-
 const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const removeFriend = (chatPartnerId: string) => {
+    setLoading(true);
     axios
       .post("/api/friends/remove", { id: chatPartnerId })
       .then(() => {
         window.location.reload();
       })
-      .catch((err) => {});
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
-    <div className="w-full h-16 flex pl-3">
-      <div className="flex w-full">
+    <div className="w-full h-16 flex pl-3 justify-center place-items-center">
+      <div className="flex w-[95%]">
         <div className="flex gap-2 text-sm font-semibold place-items-center w-full">
           <div className="relative h-11 w-11">
             <Image
@@ -49,6 +53,8 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
           <Button
             className="mr-6 text-[0.80rem]"
             size={"default"}
+            isLoading={loading}
+            showLoading={false}
             onClick={() => removeFriend(chatPartnerData.id)}
           >
             <AiFillDelete />
