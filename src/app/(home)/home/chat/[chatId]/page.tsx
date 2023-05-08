@@ -60,7 +60,7 @@ const page = async ({ params }: pageProps) => {
       <ChatHeader chatPartnerData={chatPartnerData} />
       <div className="divider mt-0 mb-0 h-1"></div>
       <Messages initialMessages={initialMessages} sessionId={sess.user.id} />
-      <ChatInput />
+      <ChatInput chatId={chatId} />
     </div>
   );
 };

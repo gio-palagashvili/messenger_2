@@ -15,8 +15,11 @@ const Messages: FC<MessagesProps> = ({ initialMessages, sessionId }) => {
         const isCurrUser = message.senderId === sessionId;
         const isConcurrent =
           messages[index - 1].senderId == messages[index].senderId;
-
-        return <div className="" key={index}></div>;
+        return (
+          <div className="" key={index}>
+            s
+          </div>
+        );
       })}
     </div>
   );
