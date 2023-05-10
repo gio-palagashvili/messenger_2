@@ -18,12 +18,12 @@ const Messages: FC<MessagesProps> = ({
   const bottomRef = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
     if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+      bottomRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, []);
 
   return (
-    <div className="w-full justify-center place-items-center flex h-[80%] overflow-scroll">
+    <div className="w-full justify-center place-items-center flex h-[80%] overflow-scroll flex-col">
       <div className="flex flex-col-reverse w-[95%] p-3 overflow-scroll mt-auto">
         {messages.map((message, index) => {
           const isCurrUser = message.senderId === sessionId;
@@ -97,7 +97,7 @@ const Messages: FC<MessagesProps> = ({
           );
         })}
       </div>
-      <div ref={bottomRef} className="h-[200px]"></div>
+      <div ref={bottomRef} className=""></div>
     </div>
   );
 };
