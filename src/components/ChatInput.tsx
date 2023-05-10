@@ -3,6 +3,7 @@ import { FC, useState, useRef } from "react";
 import Button from "./ui/Button";
 import { IoSendSharp } from "react-icons/io5";
 import axios from "axios";
+import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
   chatId: string;
@@ -10,6 +11,7 @@ interface ChatInputProps {
 
 const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<string>();
 
   const sendMessage = () => {
     setInput("");
@@ -43,7 +45,9 @@ const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
           value={input}
           ref={textareaRef}
           placeholder="Aa"
-          className="input bg-off w-full font-light resize-none text-start placeholder-center p-3"
+          className={cn(
+            "input bg-off w-full font-light resize-none text-start placeholder-center p-3"
+          )}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => handleChange(e)}
         />

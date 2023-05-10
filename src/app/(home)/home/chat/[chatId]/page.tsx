@@ -57,10 +57,14 @@ const page = async ({ params }: pageProps) => {
 
   return (
     <div className="w-full h-full flex">
-      <div className="w-[65%] h-full">
+      <div className="w-[70%] h-full">
         <ChatHeader chatPartnerData={chatPartnerData} />
         <div className="divider mt-0 mb-0 h-1"></div>
-        <Messages initialMessages={initialMessages} sessionId={sess.user.id} />
+        <Messages
+          initialMessages={initialMessages}
+          sessionId={sess.user.id}
+          chatPartnerData={chatPartnerData}
+        />
         <ChatInput chatId={chatId} />
       </div>
     </div>

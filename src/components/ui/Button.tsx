@@ -7,7 +7,7 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "btn text-white capitalize",
+        default: "btn text-white capitalize min-width-auto",
         ghost: "btn text-white capitalize bg-transparent border-none",
         ghostUnderline:
           "btn text-white capitalize bg-transparent border-none hover:bg-transparent hover:underline",
