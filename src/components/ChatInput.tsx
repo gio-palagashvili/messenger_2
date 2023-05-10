@@ -38,7 +38,7 @@ const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
   const [input, setInput] = useState<string>("");
   return (
     <div className="w-full h-[10%] flex justify-center gap-2 place-items-center">
-      <div className="w-1/2 flex justify-center place-items-center">
+      <div className="w-[80%] flex justify-center place-items-center">
         <textarea
           value={input}
           ref={textareaRef}

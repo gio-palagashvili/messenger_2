@@ -1,6 +1,9 @@
 import { handleError } from '@/app/helpers/errorHanlder';
 import { fetchRedis } from '@/app/helpers/redis';
 import { authOptions } from '@/lib/authOptions';
+import { db } from '@/lib/db';
+import { messageValidator } from '@/lib/validators/messages.zod';
+import { nanoid } from 'nanoid';
 import { NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
@@ -19,9 +22,23 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             `user:${session.user.id}:friends`,
             chatPartnerId
         );
+        if (!areFriends) return new Response("", { status: 400 });
 
-        if (!areFriends) return new Response("", { status: 404 });
+        const time = Date.now();
+        const messageData: Message = {
+            id: nanoid(),
+            senderId: session.user.id,
+            text: text,
+            timestamp: time,
+            recieverId: chatPartnerId
+        }
+        const message = messageValidator.parse(messageData);
 
+        await db.zadd(`chat:${chatId}:messages`, {
+            score: time,
+            member: JSON.stringify(message)
+        });
+        return new Response("", { status: 200 })
     } catch (error) {
         handleError(error);
     }

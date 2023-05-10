@@ -4,7 +4,7 @@ export const messageValidator = z.object({
     id: z.string(),
     senderId: z.string(),
     recieverId: z.string(),
-    text: z.string(),
+    text: z.string().min(1).max(1000),
     timestamp: z.number()
 })
 
