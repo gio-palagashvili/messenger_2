@@ -7,13 +7,14 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "btn text-white capitalize min-width-auto",
+        default: "btn text-white capitalize min-width-[2200px]",
         ghost: "btn text-white capitalize bg-transparent border-none",
         ghostUnderline:
           "btn text-white capitalize bg-transparent border-none hover:bg-transparent hover:underline",
       },
       size: {
         default: "h-10 py-2 px-4",
+        load: "h-10 py-2 px-4 min-w-[90px] w-[90px]",
         sm: "h-9 px-2",
         lg: "h-11 px-8",
       },

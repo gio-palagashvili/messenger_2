@@ -56,6 +56,7 @@ const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
         className="flex gap-1"
         onClick={sendMessage}
         isLoading={isLoading}
+        size={"load"}
         loadingType={"animate-pulse"}
         showLoading={false}
       >

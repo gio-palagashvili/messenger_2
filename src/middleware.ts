@@ -27,5 +27,5 @@ export default withAuth(async function middleware(req) {
     }
 })
 export const config = {
-    matchter: ['/', '/login', '/home/:path*']
+    matcher: ['/', '/login', '/home/:path*']
 }

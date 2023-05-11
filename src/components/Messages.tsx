@@ -51,6 +51,7 @@ const Messages: FC<MessagesProps> = ({
                 <div className="w-10 h-10 rounded-full relative mr-1 mt-auto">
                   {!hasNextMessage ? (
                     <Image
+                      sizes="1"
                       src={chatPartnerData.image}
                       className="rounded-full"
                       fill
@@ -92,6 +93,7 @@ const Messages: FC<MessagesProps> = ({
                 )}
               >
                 <p className="text-left text-sm">{message.text}</p>
+                <p className="">{}</p>
               </div>
             </div>
           );

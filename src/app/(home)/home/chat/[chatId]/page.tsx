@@ -11,21 +11,23 @@ interface pageProps {
     chatId: string;
   };
 }
+
 const getChatMessages = async (chatId: string) => {
   try {
     const result: string[] = await fetchRedis(
       "zrange",
-      `chat:90067b77-5784-4b7e-abd6-c92afed335f1--e31e2eae-5d24-4db7-af29-8413fa6f4ed3:messages`,
+      `chat:${chatId}:messages`,
       0,
       -1
     );
+
     const mess = result.map((m) => JSON.parse(m) as Message);
     const ordered = mess.reverse();
 
     const messages = messagesValidator.parse(ordered);
     return messages;
   } catch (error) {
-    notFound();
+    redirect("/home");
   }
 };
 
