@@ -1,4 +1,4 @@
-import AddFriend from "@/components/AddFriend";
+import AddFriendButton from "@/components/AddFriendButton";
 
 export const metadata = {
   title: "Add friends",
@@ -8,7 +8,7 @@ export const metadata = {
 const page = ({}) => {
   return (
     <div className="m-auto flex flex-col place-items-center w-1/2">
-      <AddFriend />
+      <AddFriendButton />
     </div>
   );
 };

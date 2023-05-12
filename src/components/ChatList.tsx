@@ -1,4 +1,5 @@
 "use client";
+import { fetchRedis } from "@/app/helpers/redis";
 import { chatIdConstructor } from "@/lib/utils";
 import { Session } from "next-auth";
 import Image from "next/image";
@@ -27,15 +28,15 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
     <div className="h-[80%] max-h-[80%] w-full overflow-y-scroll p-4 flex flex-col mt-1">
       {friends.length > 0 ? (
         friends.sort().map((friend, index) => {
+          const chatId = chatIdConstructor(session.user.id, friend.id);
+
           const unSeenMess = unseen.filter((unseenMsg) => {
             return unseenMsg.senderId === friend.id;
           }).length;
+
           return (
             <a
-              href={`/home/chat/${chatIdConstructor(
-                session.user.id,
-                friend.id
-              )}`}
+              href={`/home/chat/${chatId}`}
               key={friend.id}
               className="hover:bg-[#111318] p-3 rounded-lg duration-300 -mt-1"
             >

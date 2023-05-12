@@ -1,26 +1,42 @@
 "use client";
 import Image from "next/image";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 import HandleToast from "./HandleToast";
 import { twMerge } from "tailwind-merge";
+import { pusherClient } from "@/lib/pusher";
+import { Session } from "next-auth";
+import { pusherKey } from "@/lib/utils";
 
 interface RequestsListProps {
   incomingRequests: IncomingRequest[];
-  sessionId: string;
+  session: Session;
 }
 
-const RequestsList: FC<RequestsListProps> = ({
-  incomingRequests,
-  sessionId,
-}) => {
+const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
   const [incoming, setIncoming] = useState<IncomingRequest[]>(incomingRequests);
 
   const [error, setError] = useState<ToastError | null>(null);
   const [complete, setComplete] = useState<string | null>(null);
   const [loading, setLoading] = useState<Loading>({ isLoading: false });
+
+  useEffect(() => {
+    pusherClient.subscribe(
+      pusherKey(`user:${session.user.id}:friend_requests`)
+    );
+
+    const handleFR = (sender: IncomingRequest) => {
+      setIncoming((prev) => [...prev, sender]);
+    };
+    pusherClient.bind("friend_requests", handleFR);
+    return () => {
+      pusherClient.unsubscribe(
+        pusherKey(`user:${session.user.id}:friend_requests`)
+      );
+      pusherClient.unbind("friend_requests", handleFR);
+    };
+  }, []);
 
   const acceptFriend = async (senderId: string, index: number) => {
     setLoading({ isLoading: true, index: index });
@@ -36,6 +52,7 @@ const RequestsList: FC<RequestsListProps> = ({
       .finally(() => {
         setLoading({ isLoading: false, index: index });
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
+        window.location.reload();
       });
   };
 
@@ -53,6 +70,7 @@ const RequestsList: FC<RequestsListProps> = ({
       .finally(() => {
         setLoading({ isLoading: false, index: index });
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
+        window.location.reload();
       });
   };
 

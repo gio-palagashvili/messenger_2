@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import { validateFriend } from "@/lib/validators/addFriend.zod";
 import axios, { AxiosError } from "axios";
@@ -23,6 +23,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   } = useForm<FormData>({
     resolver: zodResolver(validateFriend),
   });
+
   const addFriend = async (email: string) => {
     setComplete(false);
     try {
@@ -45,6 +46,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       setError("email", { message: "unknown error" });
     }
   };
+
   const onSubmit = async (data: FormData) => {
     await addFriend(data.email);
   };

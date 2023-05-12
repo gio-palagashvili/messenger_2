@@ -59,7 +59,7 @@ const page = async ({ params }: pageProps) => {
 
   return (
     <div className="w-full h-full flex">
-      <div className="w-[70%] h-full">
+      <div className="w-full lg:w-[70%] h-full">
         <ChatHeader chatPartnerData={chatPartnerData} />
         <div className="divider mt-0 mb-0 h-1"></div>
         <Messages

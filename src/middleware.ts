@@ -7,6 +7,7 @@ export default withAuth(async function middleware(req) {
     const authed = await getToken({ req });
     const sensitiveRoute = ["/home"];
     const isSensitive = sensitiveRoute.some(sensitiveRoute => path.startsWith(sensitiveRoute));
+
     if (path.startsWith("/login")) {
         if (authed) {
             return NextResponse.redirect(new URL("/home", req.url));

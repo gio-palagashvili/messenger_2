@@ -23,8 +23,14 @@ const Messages: FC<MessagesProps> = ({
   }, []);
 
   return (
-    <div className="w-full justify-center place-items-center flex h-[80%] overflow-scroll flex-col">
+    <div
+      className="w-full justify-center place-items-center flex h-[80%] overflow-scroll flex-col tooltip tooltip-open"
+      data-tip="hello"
+    >
       <div className="flex flex-col-reverse w-[95%] p-3 overflow-scroll mt-auto">
+        <div className="tooltip" data-tip="hello">
+          <p>zaza</p>
+        </div>
         {messages.map((message, index) => {
           const isCurrUser = message.senderId === sessionId;
 
@@ -37,7 +43,7 @@ const Messages: FC<MessagesProps> = ({
             <div
               key={index}
               className={cn(
-                "w-full flex",
+                "w-full flex ",
                 isCurrUser
                   ? !hasPrevMessage
                     ? "justify-end mt-2"
@@ -67,11 +73,12 @@ const Messages: FC<MessagesProps> = ({
               )}
 
               <div
+                data-tip={message.timestamp}
                 className={cn(
-                  "w-fit p-2 px-4 max-w-lg min-h-10 min-w-10",
+                  "tooltip  w-fit p-2 px-4 max-w-lg min-h-10 min-w-10",
                   isCurrUser
-                    ? "self-end bg-blue-600"
-                    : "self-start bg-slate-700",
+                    ? "self-end bg-blue-600 tooltip-left"
+                    : "self-start bg-slate-700 tooltip-right",
                   hasPrevMessage && isCurrUser
                     ? "rounded-l-2xl rounded-br-2xl mt-1"
                     : "mt-1 rounded-3xl",
@@ -92,8 +99,7 @@ const Messages: FC<MessagesProps> = ({
                     : ""
                 )}
               >
-                <p className="text-left text-sm">{message.text}</p>
-                <p className="">{}</p>
+                <p className="text-left text-sm break-all">{message.text}</p>
               </div>
             </div>
           );

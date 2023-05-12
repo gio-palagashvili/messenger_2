@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import Nav from "@/components/ui/Nav";
 import { fetchRedis } from "@/app/helpers/redis";
+import { pusherServer } from "@/lib/pusher";
 
 export const metadata = {
   title: "Messenger",

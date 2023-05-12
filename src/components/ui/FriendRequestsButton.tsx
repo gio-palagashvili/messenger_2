@@ -1,8 +1,10 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import Button from "./Button";
 import axios from "axios";
+import { pusherClient } from "@/lib/pusher";
+import { pusherKey } from "@/lib/utils";
 
 interface FriendRequestsProps {
   initialReqsCount: number;
@@ -14,6 +16,20 @@ const FriendRequestsButton: FC<FriendRequestsProps> = ({
   sessionId,
 }) => {
   const [reqs, setReqs] = useState<number>(initialReqsCount || 0);
+
+  useEffect(() => {
+    pusherClient.subscribe(pusherKey(`user:${sessionId}:friend_requests`));
+
+    const handleFR = () => {
+      setReqs((prev) => prev + 1);
+    };
+    pusherClient.bind("friend_requests", handleFR);
+
+    return () => {
+      pusherClient.unsubscribe(pusherKey(`user:${sessionId}:friend_requests`));
+      pusherClient.unbind("friend_requests", handleFR);
+    };
+  }, []);
 
   return (
     <div className="indicator">
