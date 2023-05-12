@@ -2,6 +2,8 @@ import { handleError } from '@/app/helpers/errorHanlder';
 import { fetchRedis } from '@/app/helpers/redis';
 import { authOptions } from '@/lib/authOptions';
 import { db } from '@/lib/db';
+import { pusherServer } from '@/lib/pusher';
+import { pusherKey } from '@/lib/utils';
 import { messageValidator } from '@/lib/validators/messages.zod';
 import { nanoid } from 'nanoid';
 import { NextApiResponse } from 'next';
@@ -33,11 +35,19 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             recieverId: chatPartnerId
         }
         const message = messageValidator.parse(messageData);
+        console.log("object");
 
         await db.zadd(`chat:${chatId}:messages`, {
             score: time,
             member: JSON.stringify(message)
         });
+
+        pusherServer.trigger(pusherKey(
+            `chat:${chatId}:messages`
+        ), 'sent_message', {
+            ...message
+        });
+
         return new Response("", { status: 200 })
     } catch (error) {
         handleError(error);

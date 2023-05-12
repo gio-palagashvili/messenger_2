@@ -1,7 +1,9 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { chatIdConstructor, cn, pusherKey } from "@/lib/utils";
 import Image from "next/image";
 import { FC, useEffect, useRef, useState } from "react";
+import { format } from "date-fns";
+import { pusherClient } from "@/lib/pusher";
 
 interface MessagesProps {
   initialMessages: Message[];
@@ -20,20 +22,34 @@ const Messages: FC<MessagesProps> = ({
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+
+    pusherClient.subscribe(
+      pusherKey(
+        `chat:${chatIdConstructor(sessionId, chatPartnerData.id)}:messages`
+      )
+    );
+
+    const handle = (message: Message) => {
+      setMessages((prev) => [message, ...prev]);
+    };
+
+    pusherClient.bind("sent_message", handle);
+
+    return () => {
+      pusherClient.unsubscribe(
+        pusherKey(
+          `chat:${chatIdConstructor(sessionId, chatPartnerData.id)}:messages`
+        )
+      );
+      pusherClient.unbind("sent_message", handle);
+    };
   }, []);
 
   return (
-    <div
-      className="w-full justify-center place-items-center flex h-[80%] overflow-scroll flex-col tooltip tooltip-open"
-      data-tip="hello"
-    >
+    <div className="w-full justify-center place-items-center flex h-[80%] overflow-scroll flex-col tooltip tooltip-open">
       <div className="flex flex-col-reverse w-[95%] p-3 overflow-scroll mt-auto">
-        <div className="tooltip" data-tip="hello">
-          <p>zaza</p>
-        </div>
         {messages.map((message, index) => {
           const isCurrUser = message.senderId === sessionId;
-
           //! messages array is reversed so thats why +1 is prev -1 is next
           const hasPrevMessage =
             messages[index + 1]?.senderId === messages[index].senderId;
@@ -43,7 +59,7 @@ const Messages: FC<MessagesProps> = ({
             <div
               key={index}
               className={cn(
-                "w-full flex ",
+                "w-full flex",
                 isCurrUser
                   ? !hasPrevMessage
                     ? "justify-end mt-2"
@@ -71,11 +87,10 @@ const Messages: FC<MessagesProps> = ({
               ) : (
                 ""
               )}
-
               <div
-                data-tip={message.timestamp}
+                data-tip={`sent on ${format(message.timestamp, "HH:mm")}`}
                 className={cn(
-                  "tooltip  w-fit p-2 px-4 max-w-lg min-h-10 min-w-10",
+                  "tooltip w-fit p-2 px-4 max-w-lg min-h-10 min-w-10",
                   isCurrUser
                     ? "self-end bg-blue-600 tooltip-left"
                     : "self-start bg-slate-700 tooltip-right",

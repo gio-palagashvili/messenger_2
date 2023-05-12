@@ -51,7 +51,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
         </div>
         <div className="flex place-items-center">
           <Button
-            className="mr-6 text-[0.80rem] min-w-[100px]"
+            className="text-[0.80rem] min-w-[100px]"
             isLoading={loading}
             showLoading={false}
             onClick={() => removeFriend(chatPartnerData.id)}
