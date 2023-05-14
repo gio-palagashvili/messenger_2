@@ -1,10 +1,8 @@
 "use client";
-import { fetchRedis } from "@/app/helpers/redis";
 import { chatIdConstructor, cn, pusherKey } from "@/lib/utils";
 import { Session } from "next-auth";
 import Image from "next/image";
 import { format } from "date-fns";
-
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher";
@@ -17,6 +15,7 @@ interface ChatListProps {
 const ChatList: FC<ChatListProps> = ({ friends, session }) => {
   const [unseen, setUnseen] = useState<Message[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(1);
+  const [friendsState, setFriendsState] = useState<ChatList[]>(friends);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -27,12 +26,58 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
     }
   }, [pathname]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    pusherClient.subscribe(pusherKey(`user:${session.user.id}:chats`));
+    pusherClient.subscribe(pusherKey(`user:${session.user.id}:sent`));
+
+    const messageHandler = (message: Message) => {
+      setFriendsState((prev) => {
+        return prev.map((friend) => {
+          if (friend.id === message.senderId) {
+            const newData = {
+              ...friend,
+              text: message.text,
+              timestamp: message.timestamp,
+            };
+            return newData;
+          }
+          return friend;
+        });
+      });
+    };
+
+    const messageHandlerSent = (message: Message) => {
+      setFriendsState((prev) => {
+        return prev.map((friend) => {
+          if (friend.id === message.recieverId) {
+            const newData = {
+              ...friend,
+              id: session.user.id,
+              text: message.text,
+              timestamp: message.timestamp,
+            };
+            return newData;
+          }
+          return friend;
+        });
+      });
+    };
+
+    pusherClient.bind("unseen_message", messageHandler);
+    pusherClient.bind("unseen_message_me", messageHandlerSent);
+
+    return () => {
+      pusherClient.unbind("unseen_message", messageHandler);
+      pusherClient.unbind("unseen_message_me", messageHandlerSent);
+      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:chats`));
+      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:sent`));
+    };
+  }, []);
 
   return (
     <div className="h-[80%] max-h-[80%] w-full overflow-y-scroll p-4 flex flex-col mt-1">
-      {friends.length > 0 ? (
-        friends
+      {friendsState.length > 0 ? (
+        friendsState
           .sort((a, b) => {
             const timestampA = new Date(a.timestamp).getTime();
             const timestampB = new Date(b.timestamp).getTime();

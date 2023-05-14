@@ -47,6 +47,15 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             ...message
         });
 
+        // todo? find a better way if there is one
+        pusherServer.trigger(pusherKey(`user:${chatPartnerId}:chats`), "unseen_message", {
+            ...message,
+        })
+
+        pusherServer.trigger(pusherKey(`user:${session.user.id}:sent`), "unseen_message_me", {
+            ...message
+        })
+
         return new Response("", { status: 200 })
     } catch (error) {
         handleError(error);

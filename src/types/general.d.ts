@@ -10,10 +10,10 @@ interface Loading {
     index?: number;
 }
 interface ChatList {
-    name: string
-    email: string
-    image: string
-    id: string
+    name: string;
+    email: string;
+    image: string;
+    id: string;
     text: string;
     timestamp: number;
 }
