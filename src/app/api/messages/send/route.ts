@@ -35,7 +35,6 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             recieverId: chatPartnerId
         }
         const message = messageValidator.parse(messageData);
-        console.log("object");
 
         await db.zadd(`chat:${chatId}:messages`, {
             score: time,

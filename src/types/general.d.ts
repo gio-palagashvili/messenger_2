@@ -9,3 +9,11 @@ interface Loading {
     isLoading: boolean;
     index?: number;
 }
+interface ChatList {
+    name: string
+    email: string
+    image: string
+    id: string
+    text: string;
+    timestamp: number;
+}

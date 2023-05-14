@@ -2,7 +2,7 @@
 import { chatIdConstructor, cn, pusherKey } from "@/lib/utils";
 import Image from "next/image";
 import { FC, useEffect, useRef, useState } from "react";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { pusherClient } from "@/lib/pusher";
 
 interface MessagesProps {
@@ -88,7 +88,9 @@ const Messages: FC<MessagesProps> = ({
                 ""
               )}
               <div
-                data-tip={`sent on ${format(message.timestamp, "HH:mm")}`}
+                data-tip={`${formatDistanceToNow(message.timestamp, {
+                  addSuffix: true,
+                })} · ${format(message.timestamp, "HH:mm")}`}
                 className={cn(
                   "tooltip w-fit p-2 px-4 max-w-lg min-h-10 min-w-10",
                   isCurrUser

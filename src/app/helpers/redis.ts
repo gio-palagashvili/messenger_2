@@ -1,3 +1,5 @@
+import ChatList from "@/components/ChatList";
+
 const getENV = () => {
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -33,8 +35,31 @@ export const getUsersById = async (ids: string[], useSender = true) => {
     )
     return res;
 }
-export const getUserFriendsById = async (user: string) => {
+
+export const getUserFriendsById = async (user: string, includeLatest: boolean = true) => {
     const friendIds = await fetchRedis('smembers', `user:${user}:friends`) as string[];
     const friendsData = await getUsersById(friendIds, false) as User[];
-    return friendsData;
+
+    const data: ChatList[] = await Promise.all(friendsData.map(async (friend) => {
+        const chatId = [user, friend.id].sort().join("--")
+        const result: Message = JSON.parse(await fetchRedis(
+            "zrange",
+            `chat:${chatId}:messages`,
+            -1,
+            -1
+        ) as string) as Message;
+
+        const test: ChatList = {
+            email: friend.email,
+            id: friend.id,
+            image: friend.image,
+            name: friend.name,
+            text: result.text,
+            timestamp: result.timestamp
+        }
+        return test;
+    }))
+
+
+    return data;
 }
