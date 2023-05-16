@@ -2,22 +2,23 @@
 import { ButtonHTMLAttributes, FC, ReactNode, useState } from "react";
 import Button from "@/components/ui/Button";
 import { signOut } from "next-auth/react";
-import Toast from "./ui/Toast";
+import { toast } from "react-hot-toast";
 
 interface SignOutButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
 }
 
-const SignOutButton: FC<SignOutButtonProps> = ({ children, ...props }) => {
+const SignOutButton: FC<SignOutButtonProps> = ({ children }) => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [errorToast, setErrorToast] = useState<ToastError>();
 
   const signOutImplement = async () => {
     try {
       setLoading(true);
       await signOut({ callbackUrl: "/login" });
     } catch (error: any) {
-      setErrorToast({ error: error as string, text: "error signing out" });
+      toast.error(error, {
+        position: "bottom-right",
+      });
     } finally {
       setLoading(false);
     }
@@ -33,7 +34,6 @@ const SignOutButton: FC<SignOutButtonProps> = ({ children, ...props }) => {
       >
         {children}
       </Button>
-      {errorToast ? <Toast error={errorToast} variant={"error"} /> : null}
     </>
   );
 };

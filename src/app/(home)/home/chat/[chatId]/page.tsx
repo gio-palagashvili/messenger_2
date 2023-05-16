@@ -49,7 +49,7 @@ const page = async ({ params }: pageProps) => {
     chatPartnerId
   );
 
-  if (!areFriends) notFound();
+  if (!areFriends) redirect("/home");
 
   const chatPartnerData = JSON.parse(
     (await fetchRedis("get", `user:${chatPartnerId}`)) as string

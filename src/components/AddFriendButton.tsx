@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import Button from "@/components/ui/Button";
 import { validateFriend } from "@/lib/validators/addFriend.zod";
 import axios, { AxiosError } from "axios";
@@ -7,8 +7,8 @@ import { ZodError } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormData } from "@/types/zod";
-import Toast from "@/components/ui/Toast";
 import Input from "@/components/ui/Input";
+import { toast } from "react-hot-toast";
 
 interface AddFriendButtonProps {}
 
@@ -35,15 +35,17 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       setComplete(true);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        setError("email", { message: "invalid email" });
-        clearErrors("email");
+        toast.error("Invalid email", {
+          position: "bottom-right",
+        });
         return;
       }
       if (error instanceof AxiosError) {
-        setError("email", { message: error.response?.data });
+        toast.error(error.response?.data, {
+          position: "bottom-right",
+        });
         return;
       }
-      setError("email", { message: "unknown error" });
     }
   };
 
@@ -67,6 +69,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
               <Input
                 type="text"
                 {...register("email")}
+                className={errors.email ? "ring-red-400 ring-1" : ""}
                 placeholder="gio@gmail.com"
               />
               <Button isLoading={isSubmitting} showLoading={false}>
@@ -74,15 +77,6 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
               </Button>
             </div>
           </div>
-          {errors.email ? (
-            <Toast
-              error={{ text: `${errors.email?.message}` }}
-              variant={"error"}
-            />
-          ) : null}
-          {complete ? (
-            <Toast variant={"success"} completeMessage="friend request sent" />
-          ) : null}
         </form>
       </div>
     </div>

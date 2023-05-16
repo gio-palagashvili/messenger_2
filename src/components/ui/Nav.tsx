@@ -18,8 +18,8 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
   const friends = await getUserFriendsById(session.user.id);
 
   return (
-    <div className="hidden min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center ">
-      <div className="h-[10%] w-full p-3">
+    <div className="w-20 md:min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center">
+      <div className="h-[10%] w-full p-3 hidden md:flex">
         <div className="flex gap-1 justify-center">
           <Link href={"home"}>
             <Button>
@@ -53,7 +53,7 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
             alt="Your profile picture"
           />
         </div>
-        <div className="flex gap-10 justify-center place-items-center">
+        <div className="hidden md:flex gap-10 justify-center place-items-center">
           <div className="flex flex-col">
             <span aria-hidden="true" className="text-white">
               {session.user.name}

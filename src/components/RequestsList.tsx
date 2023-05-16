@@ -3,11 +3,11 @@ import Image from "next/image";
 import { FC, useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
 import axios from "axios";
-import HandleToast from "./HandleToast";
 import { twMerge } from "tailwind-merge";
 import { pusherClient } from "@/lib/pusher";
 import { Session } from "next-auth";
 import { pusherKey } from "@/lib/utils";
+import { toast } from "react-hot-toast";
 
 interface RequestsListProps {
   incomingRequests: IncomingRequest[];
@@ -17,7 +17,6 @@ interface RequestsListProps {
 const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
   const [incoming, setIncoming] = useState<IncomingRequest[]>(incomingRequests);
 
-  const [error, setError] = useState<ToastError | null>(null);
   const [complete, setComplete] = useState<string | null>(null);
   const [loading, setLoading] = useState<Loading>({ isLoading: false });
 
@@ -29,6 +28,7 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
     const handleFR = (sender: IncomingRequest) => {
       setIncoming((prev) => [...prev, sender]);
     };
+
     pusherClient.bind("friend_requests", handleFR);
     return () => {
       pusherClient.unsubscribe(
@@ -44,14 +44,15 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
       .post("/api/friends/accept", { id: senderId })
       .then((d) => {
         setComplete(d.data);
-        setError(null);
+        setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
       })
       .catch((err) => {
-        setError({ text: err.response.data, index: index });
+        toast.error(err.response?.data, {
+          position: "bottom-right",
+        });
       })
       .finally(() => {
         setLoading({ isLoading: false, index: index });
-        setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
         window.location.reload();
       });
   };
@@ -62,10 +63,11 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
       .post("/api/friends/reject", { id: senderId })
       .then((d) => {
         setComplete(d.data);
-        setError(null);
       })
       .catch((err) => {
-        setError(err.response.data);
+        toast.error(err.response?.data, {
+          position: "bottom-right",
+        });
       })
       .finally(() => {
         setLoading({ isLoading: false, index: index });
@@ -122,7 +124,6 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
           <p className="text-zinc-400">Nothing to show here.</p>
         )}
       </div>
-      <HandleToast complete={complete} error={error} />
     </>
   );
 };
