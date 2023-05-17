@@ -10,6 +10,7 @@ interface Message {
     recieverId: string;
     text: string;
     timestamp: number;
+    rec?: boolean;
 }
 interface Chat {
     id: string;

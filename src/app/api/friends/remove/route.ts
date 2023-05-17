@@ -16,6 +16,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         if (!id) return new Response("invalid id", { status: 400 });
         if (!await fetchRedis("get", `user:${id}`)) return new Response("No user found", { status: 404 });
 
+        // not deleting the chat between the users intentionally
         db.srem(`user:${sess.user.id}:friends`, id);
         db.srem(`user:${id}:friends`, sess.user.id);
 

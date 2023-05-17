@@ -8,6 +8,8 @@ import { pusherClient } from "@/lib/pusher";
 import { Session } from "next-auth";
 import { pusherKey } from "@/lib/utils";
 import { toast } from "react-hot-toast";
+import { motion } from "framer-motion";
+import { errorToast } from "./ui/customToasts";
 
 interface RequestsListProps {
   incomingRequests: IncomingRequest[];
@@ -47,9 +49,7 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
         setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
       })
       .catch((err) => {
-        toast.error(err.response?.data, {
-          position: "bottom-right",
-        });
+        errorToast(err.response?.data);
       })
       .finally(() => {
         setLoading({ isLoading: false, index: index });
@@ -65,9 +65,7 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
         setComplete(d.data);
       })
       .catch((err) => {
-        toast.error(err.response?.data, {
-          position: "bottom-right",
-        });
+        errorToast(err.response?.data);
       })
       .finally(() => {
         setLoading({ isLoading: false, index: index });

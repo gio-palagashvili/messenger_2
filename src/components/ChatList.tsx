@@ -82,7 +82,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:chats`));
       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:sent`));
     };
-  }, [pathname]);
+  }, [pathname, session.user.id]);
 
   return (
     <>

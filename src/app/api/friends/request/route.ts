@@ -19,12 +19,12 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         const userId = await fetchRedis("get", `user:email:${email}`);
 
         if (!userId) return new Response("no user found", { status: 400 });
-        if (userId === sess.user.id) return new Response("can't add urself as a friend", { status: 400 });
+        if (userId === sess.user.id) return new Response("can't add yourself as a friend", { status: 400 });
 
         const alrSent = await fetchRedis("sismember", `user:${userId}:friend_requests`, sess.user.id) as 0 | 1;
         const alrAdded = await fetchRedis("sismember", `user:${userId}:friends`, sess.user.id) as 0 | 1;
 
-        if (alrSent) return new Response("already sent", { status: 400 });
+        if (alrSent) return new Response("request already sent", { status: 400 });
         if (alrAdded) return new Response("already friends", { status: 400 })
 
         pusherServer.trigger(pusherKey(`user:${userId}:friend_requests`), 'friend_requests', {

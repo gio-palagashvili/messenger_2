@@ -4,6 +4,7 @@ import Button from "./ui/Button";
 import { IoSendSharp } from "react-icons/io5";
 import axios from "axios";
 import { cn } from "@/lib/utils";
+import { errorToast } from "./ui/customToasts";
 
 interface ChatInputProps {
   chatId: string;
@@ -11,7 +12,6 @@ interface ChatInputProps {
 
 const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<string>();
 
   const sendMessage = () => {
     setInput("");
@@ -24,7 +24,7 @@ const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
       })
       .then((data) => {})
       .catch((err) => {
-        console.log(err);
+        errorToast(err);
       })
       .finally(() => {
         setIsLoading(false);

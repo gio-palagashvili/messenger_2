@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormData } from "@/types/zod";
 import Input from "@/components/ui/Input";
 import { toast } from "react-hot-toast";
+import { cn } from "@/lib/utils";
+import { errorToast, successToast } from "./ui/customToasts";
 
 interface AddFriendButtonProps {}
 
@@ -31,19 +33,17 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
       await axios.post("/api/friends/request", {
         email: email,
       });
+
+      successToast(`sent to ${email}`);
       clearErrors("email");
       setComplete(true);
     } catch (error: any) {
       if (error instanceof ZodError) {
-        toast.error("Invalid email", {
-          position: "bottom-right",
-        });
+        errorToast("invailid email");
         return;
       }
       if (error instanceof AxiosError) {
-        toast.error(error.response?.data, {
-          position: "bottom-right",
-        });
+        errorToast(error.response?.data);
         return;
       }
     }
@@ -54,32 +54,34 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
   };
 
   return (
-    <div className="w-full flex flex-col place-items-center">
-      <div className="w-[90%] flex flex-col gap-3 lg:w-[60%]">
-        <h1 className="text-4xl bold ml-[0.20rem]">Add a friend</h1>
-        <form
-          className="flex flex-col gap-4 w-full"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <div className="flex flex-col gap-2 w-full">
-            <label htmlFor="email" className="ml-1">
-              Email
-            </label>
-            <div className="flex gap-3 w-full">
-              <Input
-                type="text"
-                {...register("email")}
-                className={errors.email ? "ring-red-400 ring-1" : ""}
-                placeholder="gio@gmail.com"
-              />
-              <Button isLoading={isSubmitting} showLoading={false}>
-                Add
-              </Button>
-            </div>
-          </div>
-        </form>
+    <form
+      className="flex flex-col gap-4 w-full"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="flex flex-col gap-2 w-full">
+        <label htmlFor="email" className="ml-1">
+          Email
+        </label>
+        <div className="flex gap-3 w-full">
+          <Input
+            type="text"
+            {...register("email")}
+            className={cn(
+              "w-96 max-w-[24rem]",
+              errors.email ? "ring-red-400 ring-1" : ""
+            )}
+            placeholder="gio@gmail.com"
+          />
+          <Button
+            isLoading={isSubmitting}
+            showLoading={false}
+            className="min-w-[4rem]"
+          >
+            Add
+          </Button>
+        </div>
       </div>
-    </div>
+    </form>
   );
 };
 

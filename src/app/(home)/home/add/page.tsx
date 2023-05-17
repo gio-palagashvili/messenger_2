@@ -5,10 +5,15 @@ export const metadata = {
   description: "add friends messenger",
 };
 
-const page = ({}) => {
+const page = async ({}) => {
   return (
     <div className="m-auto flex flex-col place-items-center w-1/2">
-      <AddFriendButton />
+      <div className="w-full flex flex-col place-items-center">
+        <div className="w-[90%] flex flex-col gap-3 lg:w-[60%]">
+          <h1 className="text-4xl bold ml-[0.20rem]">Add a friend</h1>
+          <AddFriendButton />
+        </div>
+      </div>
     </div>
   );
 };
