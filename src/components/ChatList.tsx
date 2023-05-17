@@ -3,7 +3,7 @@ import { chatIdConstructor, cn, pusherKey } from "@/lib/utils";
 import { Session } from "next-auth";
 import Image from "next/image";
 import { format } from "date-fns";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher";
 import toast, { Toaster } from "react-hot-toast";
@@ -82,7 +82,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:chats`));
       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:sent`));
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <>
@@ -91,7 +91,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
           duration: 3000,
         }}
       />
-      <div className="h-[80%] max-h-[80%] w-full overflow-y-scroll p-4 flex flex-col mt-1">
+      <div className="h-[80%] max-h-[80%] w-full overflow-y-scroll p-4 flex flex-col mt-1 gap-3 md:gap-0">
         {friendsState.length > 0 ? (
           friendsState
             .sort((a, b) => {
@@ -108,15 +108,15 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                   href={`/home/chat/${chatId}`}
                   key={friend.id}
                   className={cn(
-                    "hover:bg-[#111318] p-3 rounded-lg duration-300 -mt-1 cursor-pointer"
+                    "md:hover:bg-[#111318] md:p-3 rounded-lg duration-300 -mt-1 cursor-pointer w-full"
                     // todo selectedIndex === index ? "bg-[#111318]" : ""
                   )}
                 >
                   <div className="flex gap-[0.4rem]">
-                    <div className="relative h-11 w-11 flex">
+                    <div className="relative w-14 h-14 flex md:w-11 md:h-11 hover:scale-95 duration-400">
                       <Image
                         referrerPolicy="no-referrer"
-                        className="rounded-full min-w-[2.75rem]"
+                        className="rounded-full min-w-[3.5rem] md:min-w-[2.75rem]"
                         placeholder="empty"
                         fill={true}
                         sizes="2.25rem"

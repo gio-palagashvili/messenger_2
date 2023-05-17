@@ -19,7 +19,7 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
 
   return (
     <div className="w-20 md:min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center">
-      <div className="h-[10%] w-full p-3 hidden md:flex">
+      <div className="hidden h-[10%] w-full p-3 md:flex">
         <div className="flex gap-1 justify-center">
           <Link href={"home"}>
             <Button>
@@ -41,8 +41,8 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
         </div>
       </div>
       <ChatList friends={friends} session={session} />
-      <div className="flex gap-2 text-sm font-semibold justify-center place-items-center">
-        <div className="relative h-9 w-9">
+      <div className="md:flex gap-2 text-sm font-semibold justify-center place-items-center">
+        <div className="relative h-9 w-9 hidden md:flex">
           <Image
             referrerPolicy="no-referrer"
             className="rounded-full"
@@ -53,12 +53,15 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
             alt="Your profile picture"
           />
         </div>
-        <div className="hidden md:flex gap-10 justify-center place-items-center">
-          <div className="flex flex-col">
-            <span aria-hidden="true" className="text-white">
+        <div className="md:flex gap-10">
+          <div className="flex flex-col justify-center">
+            <span aria-hidden="true" className="text-white text-left">
               {session.user.name}
             </span>
-            <span className="text-xs text-zinc-400" aria-hidden="true">
+            <span
+              className="text-xs text-zinc-400 hidden md:flex"
+              aria-hidden="true"
+            >
               {session.user.email}
             </span>
           </div>
