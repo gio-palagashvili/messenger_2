@@ -30,6 +30,7 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
   useEffect(() => {
     pusherClient.subscribe(pusherKey(`user:${session.user.id}:chats`));
     pusherClient.subscribe(pusherKey(`user:${session.user.id}:sent`));
+    pusherClient.subscribe(pusherKey(`user:${session.user.id}:friends`));
 
     const messageHandler = (message: Message) => {
       if (
@@ -73,12 +74,23 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
       });
     };
 
+    const friendHandler = (item: ChatList) => {
+      console.log(item);
+      setFriendsState((prev) => {
+        return [...prev, item];
+      });
+    };
+
     pusherClient.bind("unseen_message", messageHandler);
     pusherClient.bind("unseen_message_me", messageHandlerSent);
+    pusherClient.bind("friend_accepted", friendHandler);
 
     return () => {
       pusherClient.unbind("unseen_message", messageHandler);
       pusherClient.unbind("unseen_message_me", messageHandlerSent);
+      pusherClient.unbind("friend_accepted", friendHandler);
+
+      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:friends`));
       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:chats`));
       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:sent`));
     };
