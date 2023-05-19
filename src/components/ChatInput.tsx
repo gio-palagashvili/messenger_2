@@ -4,7 +4,7 @@ import Button from "./ui/Button";
 import { IoSendSharp } from "react-icons/io5";
 import axios from "axios";
 import { cn } from "@/lib/utils";
-import { errorToast } from "./ui/customToasts";
+import { errorToast } from "@/lib/customToasts";
 
 interface ChatInputProps {
   chatId: string;

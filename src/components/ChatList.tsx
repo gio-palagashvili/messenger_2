@@ -114,7 +114,6 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
             })
             .map((friend, index) => {
               const chatId = chatIdConstructor(session.user.id, friend.id);
-
               return (
                 <a
                   href={`/home/chat/${chatId}`}

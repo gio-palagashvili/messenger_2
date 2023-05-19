@@ -10,7 +10,7 @@ import { FormData } from "@/types/zod";
 import Input from "@/components/ui/Input";
 import { toast } from "react-hot-toast";
 import { cn } from "@/lib/utils";
-import { errorToast, successToast } from "./ui/customToasts";
+import { errorToast, successToast } from "@/lib/customToasts";
 
 interface AddFriendButtonProps {}
 

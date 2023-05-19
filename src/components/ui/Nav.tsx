@@ -4,10 +4,11 @@ import Button from "@/components/ui/Button";
 import SignOutButton from "@/components/SignOutButton";
 import Link from "next/link";
 import { BiLogOut } from "react-icons/bi";
-import { BsFillChatFill, BsPersonPlusFill } from "react-icons/bs";
-import FriendRequestsButton from "@/components/ui/FriendRequestsButton";
+import { BsPersonPlusFill } from "react-icons/bs";
+import FriendRequestsButton from "@/components/FriendRequestsButton";
 import { getUserFriendsById } from "@/app/helpers/redis";
 import ChatList from "@/components/ChatList";
+import CreateGroupButton from "../CreateGroupButton";
 
 interface NavProps {
   session: Session;
@@ -21,12 +22,7 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
     <div className="w-20 md:min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center">
       <div className="hidden h-[10%] w-full p-3 md:flex">
         <div className="flex gap-1 justify-center">
-          <Link href={"home"}>
-            <Button>
-              <BsFillChatFill size={15} />
-              chat
-            </Button>
-          </Link>
+          <CreateGroupButton />
           <Link href={"home/requests"}>
             <FriendRequestsButton
               sessionId={session.user.id}

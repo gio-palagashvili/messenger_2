@@ -1,5 +1,11 @@
 import Provider from "@/components/Provider";
 import "./globals.css";
+import { Inter, Roboto } from "@next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["200", "400", "700"],
+});
 
 export const metadata = {
   title: "Messenger",
@@ -13,7 +19,10 @@ export default function RootLayout({
 }) {
   return (
     <Provider>
-      <html lang="en" className="bg-main text-white z-0 w-full h-full">
+      <html
+        lang="en"
+        className={`bg-main text-white z-0 w-full h-full ${inter.className}`}
+      >
         <head>
           <link
             rel="shortcut icon"

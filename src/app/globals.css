@@ -31,3 +31,14 @@
         display: flex;
     }
 }
+
+.cl {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+.idk {
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+}

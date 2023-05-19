@@ -9,7 +9,7 @@ import { Session } from "next-auth";
 import { pusherKey } from "@/lib/utils";
 import { toast } from "react-hot-toast";
 import { motion } from "framer-motion";
-import { errorToast } from "./ui/customToasts";
+import { errorToast } from "@/lib/customToasts";
 
 interface RequestsListProps {
   incomingRequests: IncomingRequest[];

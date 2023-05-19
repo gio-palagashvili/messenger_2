@@ -1,7 +1,7 @@
 "use client";
 import { FC, useEffect, useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
-import Button from "./Button";
+import Button from "./ui/Button";
 import axios from "axios";
 import { pusherClient } from "@/lib/pusher";
 import { pusherKey } from "@/lib/utils";
