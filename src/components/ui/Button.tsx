@@ -11,12 +11,14 @@ export const buttonVariants = cva(
         ghost: "btn text-white capitalize bg-transparent border-none",
         ghostUnderline:
           "btn text-white capitalize bg-transparent border-none hover:bg-transparent hover:underline",
+        pill: "bg-[#1A1D23] hover:bg-[#111318] rounded-md text-sm",
       },
       size: {
         default: "h-10 py-2 px-4",
         load: "h-10 py-2 px-4 min-w-[90px] w-[90px]",
-        sm: "h-9 px-2",
+        sm: "px-1 py-0 text-xs h-1",
         lg: "h-11 px-8",
+        pill: "p-[0.3rem] px-2",
       },
     },
     defaultVariants: {

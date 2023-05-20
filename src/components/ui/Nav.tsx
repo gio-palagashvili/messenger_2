@@ -8,7 +8,7 @@ import { BsPersonPlusFill } from "react-icons/bs";
 import FriendRequestsButton from "@/components/FriendRequestsButton";
 import { getUserFriendsById } from "@/app/helpers/redis";
 import ChatList from "@/components/ChatList";
-import CreateGroupButton from "../CreateGroupButton";
+import CreateGroupButton from "../CreateGroup";
 
 interface NavProps {
   session: Session;
@@ -22,7 +22,7 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
     <div className="w-20 md:min-w-[300px] h-full bg-off md:flex justify-center flex-col place-items-center">
       <div className="hidden h-[10%] w-full p-3 md:flex">
         <div className="flex gap-1 justify-center">
-          <CreateGroupButton />
+          <CreateGroupButton friends={friends} />
           <Link href={"home/requests"}>
             <FriendRequestsButton
               sessionId={session.user.id}
