@@ -23,10 +23,17 @@ const FriendRequestsButton: FC<FriendRequestsProps> = ({
     const handleFR = () => {
       setReqs((prev) => prev + 1);
     };
+    const handleFrHere = () => {
+      setReqs((prev) => prev - 1);
+    };
+
     pusherClient.bind("friend_requests", handleFR);
+    pusherClient.bind("friend_requests_accept", handleFrHere);
 
     return () => {
       pusherClient.unsubscribe(pusherKey(`user:${sessionId}:friend_requests`));
+      pusherClient.unbind("friend_requests_accept", handleFrHere);
+
       pusherClient.unbind("friend_requests", handleFR);
     };
   }, []);

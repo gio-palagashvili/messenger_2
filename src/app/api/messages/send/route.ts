@@ -52,7 +52,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             ...message,
         })
 
-        pusherServer.trigger(pusherKey(`user:${session.user.id}:sent`), "unseen_message_me", {
+        pusherServer.trigger(pusherKey(`user:${session.user.id}:sent`), "curr_user_sent", {
             ...message
         })
 

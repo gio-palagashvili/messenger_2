@@ -2,7 +2,7 @@ import { FC, InputHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 
-export const inputVariants = cva("input", {
+export const inputVariants = cva("input font-semibold", {
   variants: {
     variant: {
       default: "w-full bg-base-200",

@@ -4,6 +4,7 @@ import { AiFillDelete } from "react-icons/ai";
 import Button from "./Button";
 import Image from "next/image";
 import axios from "axios";
+import { redirect } from "next/navigation";
 
 interface ChatHeaderProps {
   chatPartnerData: User;
@@ -16,7 +17,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
     axios
       .post("/api/friends/remove", { id: chatPartnerId })
       .then(() => {
-        window.location.reload();
+        redirect("/home");
       })
       .finally(() => {
         setLoading(false);

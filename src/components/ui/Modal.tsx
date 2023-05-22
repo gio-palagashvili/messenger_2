@@ -28,7 +28,7 @@ const Modal = React.forwardRef<HTMLDivElement, ModalProps>(
     <div className={cn(variants({ variant }))}>
       <div
         ref={ref}
-        className="bg-main  self-center rounded-lg drop-shadow-md m-auto h-[80%] w-[30%] px-4 pt-10"
+        className="bg-main self-center rounded-lg drop-shadow-md m-auto h-[38rem] w-[28rem] px-4 pt-10"
       >
         {children}
       </div>

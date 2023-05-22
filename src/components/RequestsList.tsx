@@ -53,7 +53,6 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
       })
       .finally(() => {
         setLoading({ isLoading: false, index: index });
-        window.location.reload();
       });
   };
 
@@ -68,8 +67,6 @@ const RequestsList: FC<RequestsListProps> = ({ incomingRequests, session }) => {
         errorToast(err.response?.data);
       })
       .finally(() => {
-        setLoading({ isLoading: false, index: index });
-        setIncoming((prev) => prev.filter((r) => r.senderId != senderId));
         window.location.reload();
       });
   };

@@ -10,7 +10,7 @@ const getENV = () => {
     return { token, url }
 }
 
-type Command = 'zrange' | 'sismember' | 'get' | 'smembers';
+type Command = 'zrange' | 'sismember' | 'get' | 'smembers' | 'exists';
 
 export const fetchRedis = async (command: Command, ...args: (string | number)[]) => {
     const commUrl = `${getENV().url}/${command}/${args.join("/")}`;
@@ -35,31 +35,52 @@ export const getUsersById = async (ids: string[], useSender = true) => {
     )
     return res;
 }
-
-export const getUserFriendsById = async (user: string, includeLatest: boolean = true) => {
+export const getUserFriendsById = async (user: string, useChatList: boolean = true) => {
     const friendIds = await fetchRedis('smembers', `user:${user}:friends`) as string[];
     const friendsData = await getUsersById(friendIds, false) as User[];
 
     const data: ChatList[] = await Promise.all(friendsData.map(async (friend) => {
         const chatId = [user, friend.id].sort().join("--")
-        const result: Message = JSON.parse(await fetchRedis(
-            "zrange",
-            `chat:${chatId}:messages`,
-            -1,
-            -1
-        ) as string) as Message;
 
-        const test: ChatList = {
+        if (await fetchRedis("exists", `chat:${chatId}:messages`)) {
+            const result: Message = JSON.parse(await fetchRedis(
+                "zrange",
+                `chat:${chatId}:messages`,
+                -1,
+                -1
+            ) as string) as Message;
+
+            const test: ChatList = {
+                email: friend.email,
+                id: friend.id,
+                image: friend.image,
+                name: friend.name,
+                text: result.text,
+                timestamp: result.timestamp
+            }
+
+            return test;
+        }
+
+        return {
             email: friend.email,
             id: friend.id,
             image: friend.image,
             name: friend.name,
-            text: result.text,
-            timestamp: result.timestamp
+            text: `you can now text ${friend.name}`,
+            timestamp: 0
         }
-        return test;
     }))
 
+    return useChatList ? data : friendsData;
+}
+export const getUserGroups = async (userId: string, forwardLatest: boolean = true) => {
+    const getGroupIds = await fetchRedis("smembers", `user:${userId}:groups`);
+    if (getGroupIds.length > 0) {
+        const groupData: Group[] = await Promise.all(getGroupIds.map(async (id: string) => {
+            return JSON.parse(await fetchRedis("smembers", `group:${id}`)) as Group;
+        }))
+    }
+    console.log(getGroupIds);
 
-    return data;
 }

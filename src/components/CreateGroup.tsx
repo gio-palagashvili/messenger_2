@@ -6,6 +6,8 @@ import useClickOutside from "@/hooks/useClickOutside";
 import Input from "./ui/Input";
 import Modal from "./ui/Modal";
 import Image from "next/image";
+import { errorToast, successToast } from "@/lib/customToasts";
+import axios from "axios";
 
 interface CreateGroupButtonProps {
   friends: ChatList[];
@@ -14,16 +16,53 @@ interface CreateGroupButtonProps {
 const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [selectedFriends, setSelectedFriends] = useState<ChatList[]>([]);
-  const [friendsState, setFriendsState] = useState<ChatList[]>(friends);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [groupName, setGroupName] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useClickOutside(ref, () => {
+    // i didnt use handleClose here because user might accidentally click outside
     setOpen(false);
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+  };
+  const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGroupName(e.target.value);
+  };
+
+  const createGroup = () => {
+    if (groupName?.length === 0) {
+      errorToast("name too short");
+      return;
+    }
+    if (selectedFriends.length == 0) {
+      errorToast("add atleast one friend");
+      return;
+    }
+    setIsLoading(true);
+    axios
+      .post("/api/group/create", {
+        groupName,
+        selectedFriends,
+      })
+      .then(() => {
+        successToast("group created");
+        handleClose();
+      })
+      .catch((err) => {
+        errorToast(err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setIsLoading(false);
+    setSelectedFriends([]);
   };
 
   return (
@@ -34,6 +73,7 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
       </Button>
       {isOpen ? (
         <Modal ref={ref} variant={"blur"}>
+          <div></div>
           <div className="search_div mb-3">
             <div className="flex w-full flex-col place-items-center gap-3">
               <FaUsers size={35} />
@@ -42,7 +82,7 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
                 select the friends you want to add to this group.
               </p>
             </div>
-            <div className="relative block mt-10">
+            <div className="input_div relative block mt-10">
               <FaSearch
                 size={15}
                 className="pointer-events-none absolute transform left-3 idk"
@@ -54,8 +94,8 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
               />
             </div>
           </div>
-          <div className="friend_list_div w-full gap-2 flex flex-col overflow-scroll h-64 mb-4">
-            {friendsState
+          <div className="friend_list_div w-full gap-2 flex flex-col overflow-scroll max-h-48 h-48 mb-4">
+            {friends
               .filter((friend) => {
                 if (searchQuery) {
                   return friend.name
@@ -63,7 +103,6 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
                     .includes(searchQuery.toLowerCase()) ||
                     friend.email
                       .toLowerCase()
-                      .split("@")[0]
                       .includes(searchQuery.toLowerCase())
                     ? friend
                     : null;
@@ -147,11 +186,19 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
                 );
               })}
           </div>
+          <div className="name_div flex flex-col h-20">
+            <label htmlFor="" className="text-xs ml-1 mb-[0.3rem]">
+              Name
+            </label>
+            <Input placeholder="group chat #1" onChange={(e) => setName(e)} />
+          </div>
           <div className="final_buttons h-10 flex justify-end gap-2">
-            <Button variant={"ghostUnderline"} onClick={() => setOpen(false)}>
-              close
+            <Button variant={"ghostUnderline"} onClick={handleClose}>
+              cancel
             </Button>
-            <Button>save</Button>
+            <Button onClick={createGroup} isLoading={isLoading}>
+              save
+            </Button>
           </div>
         </Modal>
       ) : (

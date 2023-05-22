@@ -36,8 +36,22 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
       if (
         pathname ==
         `/home/chat/${chatIdConstructor(session.user.id, message.senderId)}`
-      )
+      ) {
+        setFriendsState((prev) => {
+          return prev.map((friend) => {
+            if (friend.id === message.senderId) {
+              const newData = {
+                ...friend,
+                text: message.text,
+                timestamp: message.timestamp,
+              };
+              return newData;
+            }
+            return friend;
+          });
+        });
         return;
+      }
 
       setFriendsState((prev) => {
         return prev.map((friend) => {
@@ -75,24 +89,23 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
     };
 
     const friendHandler = (item: ChatList) => {
-      console.log(item);
       setFriendsState((prev) => {
         return [...prev, item];
       });
     };
 
     pusherClient.bind("unseen_message", messageHandler);
-    pusherClient.bind("unseen_message_me", messageHandlerSent);
+    pusherClient.bind("curr_user_sent", messageHandlerSent);
     pusherClient.bind("friend_accepted", friendHandler);
 
     return () => {
       pusherClient.unbind("unseen_message", messageHandler);
-      pusherClient.unbind("unseen_message_me", messageHandlerSent);
+      pusherClient.unbind("curr_user_sent", messageHandlerSent);
       pusherClient.unbind("friend_accepted", friendHandler);
 
-      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:friends`));
-      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:chats`));
-      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}}:sent`));
+      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}:friends`));
+      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}:chats`));
+      pusherClient.unsubscribe(pusherKey(`user:${session.user.id}:sent`));
     };
   }, [pathname, session.user.id]);
 
@@ -142,12 +155,26 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
                       >
                         <span>{friend.name}</span>
                       </span>
-                      <span
-                        className="text-[0.80rem] text-zinc-400 mt-[-2px] ml-[2px]"
-                        aria-hidden="true"
-                      >
-                        {friend.text} · {format(friend.timestamp, "HH:mm")}
-                      </span>
+                      <div className="flex gap-[0.1rem]">
+                        <span
+                          className="text-[0.80rem] text-zinc-400 mt-[-2px] ml-[2px] truncate"
+                          aria-hidden="true"
+                        >
+                          {friend.text}
+                        </span>
+                        {friend.timestamp ? (
+                          <>
+                            <span className="text-[0.80rem] text-zinc-400 mt-[-2px] ml-[2px]">
+                              ·
+                            </span>
+                            <span className="text-[0.80rem] text-zinc-400 mt-[-2px] ml-[2px]">
+                              {format(friend.timestamp, "HH:mm")}
+                            </span>
+                          </>
+                        ) : (
+                          ""
+                        )}
+                      </div>
                     </div>
                   </div>
                 </a>
