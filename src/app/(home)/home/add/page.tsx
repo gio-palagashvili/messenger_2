@@ -7,9 +7,9 @@ export const metadata = {
 
 const page = async ({}) => {
   return (
-    <div className="m-auto flex flex-col place-items-center w-1/2">
+    <div className="m-auto flex flex-col place-items-center w-full">
       <div className="w-full flex flex-col place-items-center">
-        <div className="w-[90%] flex flex-col gap-3 lg:w-[60%]">
+        <div className="w-[90%] md:w-[80%] lg:w-[35rem] flex flex-col gap-3">
           <h1 className="text-4xl bold ml-[0.20rem]">Add a friend</h1>
           <AddFriendButton />
         </div>

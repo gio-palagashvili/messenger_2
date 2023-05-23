@@ -22,7 +22,8 @@ interface FriendRequest {
     recieverId: string;
 }
 interface Group {
-    name: string
+    name: string,
+    members: User[]
 }
 interface GroupMessage {
     id: string;

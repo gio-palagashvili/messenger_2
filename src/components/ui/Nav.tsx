@@ -37,7 +37,16 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
           </Link>
         </div>
       </div>
-      <ChatList friends={friends} session={session} />
+      <div className="h-[90%] w-full">
+        <div className="h-1/2 w-full">
+          <h1 className="ml-3 text-zinc-500">Chats</h1>
+          <ChatList friends={friends} session={session} />
+        </div>
+        <div className="h-1/2 w-full">
+          <h1 className="ml-3 text-zinc-500">Groups</h1>
+          <ChatList friends={userGroups} session={session} />
+        </div>
+      </div>
       <div className="md:flex gap-2 text-sm font-semibold justify-center place-items-center">
         <div className="relative h-9 w-9 hidden md:flex">
           <Image

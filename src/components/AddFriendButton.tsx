@@ -66,10 +66,7 @@ const AddFriendButton: FC<AddFriendButtonProps> = ({}) => {
           <Input
             type="text"
             {...register("email")}
-            className={cn(
-              "w-96 max-w-[24rem]",
-              errors.email ? "ring-red-400 ring-1" : ""
-            )}
+            className={cn("w-[90%]", errors.email ? "ring-red-400 ring-1" : "")}
             placeholder="gio@gmail.com"
           />
           <Button

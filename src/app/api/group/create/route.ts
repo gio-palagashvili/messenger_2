@@ -35,12 +35,19 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         if (!areFriends) return new Response("can't add non-friends to a group", { status: 400 });
 
         const id = nanoid();
-        await db.sadd(`group:${id}`, JSON.stringify({ "name": groupName, "members": userFriends }));
+        const members = userFriends.map(friend => {
+            return friend.id
+        });
+        members.push(session.user.id);
 
-        await db.sadd(`user:${session.user.id}:groups`, id)
+        await db.sadd(`group:${id}`, JSON.stringify({
+            "name": groupName, "members": members
+        }));
+
         await Promise.all(userFriends.map((friend) => {
             db.sadd(`user:${friend.id}:groups`, id)
         }))
+        await db.sadd(`user:${session.user.id}:groups`, id)
 
         return new Response("", { status: 200 })
     } catch (error) {

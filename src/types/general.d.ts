@@ -16,4 +16,6 @@ interface ChatList {
     id: string;
     text: string;
     timestamp: number;
+    isGroup?: boolean;
+    groupId?: string;
 }

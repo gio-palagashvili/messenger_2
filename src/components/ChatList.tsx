@@ -125,22 +125,23 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
 
               return timestampB - timestampA;
             })
-            .map((friend, index) => {
-              const chatId = chatIdConstructor(session.user.id, friend.id);
+            .map((friend) => {
+              const chatId = friend.isGroup
+                ? friend.groupId
+                : chatIdConstructor(session.user.id, friend.id);
               return (
                 <a
-                  href={`/home/chat/${chatId}`}
+                  href={!friend.isGroup ? `/home/chat/${chatId}` : ""}
                   key={friend.id}
                   className={cn(
                     "md:hover:bg-[#111318] md:p-3 rounded-lg duration-300 -mt-1 cursor-pointer w-full"
-                    // todo selectedIndex === index ? "bg-[#111318]" : ""
                   )}
                 >
                   <div className="flex gap-[0.4rem]">
                     <div className="relative w-14 h-14 flex md:w-11 md:h-11 hover:scale-95 duration-400">
                       <Image
                         referrerPolicy="no-referrer"
-                        className="rounded-full min-w-[3.5rem] md:min-w-[2.75rem]"
+                        className="rounded-full min-w-[3.5rem] md:min-w-[2.75rem] object-cover"
                         placeholder="empty"
                         fill={true}
                         sizes="2.25rem"

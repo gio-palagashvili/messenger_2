@@ -1,5 +1,3 @@
-import ChatList from "@/components/ChatList";
-
 const getENV = () => {
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
@@ -35,7 +33,7 @@ export const getUsersById = async (ids: string[], useSender = true) => {
     )
     return res;
 }
-export const getUserFriendsById = async (user: string, useChatList: boolean = true) => {
+export const getUserFriendsById = async (user: string, includeChatList: boolean = true) => {
     const friendIds = await fetchRedis('smembers', `user:${user}:friends`) as string[];
     const friendsData = await getUsersById(friendIds, false) as User[];
 
@@ -61,7 +59,6 @@ export const getUserFriendsById = async (user: string, useChatList: boolean = tr
 
             return test;
         }
-
         return {
             email: friend.email,
             id: friend.id,
@@ -72,15 +69,30 @@ export const getUserFriendsById = async (user: string, useChatList: boolean = tr
         }
     }))
 
-    return useChatList ? data : friendsData;
+    return includeChatList ? data : friendsData;
 }
-export const getUserGroups = async (userId: string, forwardLatest: boolean = true) => {
-    const getGroupIds = await fetchRedis("smembers", `user:${userId}:groups`);
-    if (getGroupIds.length > 0) {
-        const groupData: Group[] = await Promise.all(getGroupIds.map(async (id: string) => {
-            return JSON.parse(await fetchRedis("smembers", `group:${id}`)) as Group;
-        }))
+export const getUserGroups = async (userId: string, forwardLatest: boolean = true): Promise<ChatList[] | Group[]> => {
+    const getGroupIds: string[] = await fetchRedis("smembers", `user:${userId}:groups`);
+    if (getGroupIds.length === 0) {
+        return [];
     }
-    console.log(getGroupIds);
+    const groupData: Group[] = await Promise.all(getGroupIds.map(group => {
+        return fetchRedis("smembers", `group:${group}`)
+    }))
+    const groupMessages: ChatList[] = await Promise.all(getGroupIds.map(group => {
+        const latestMessage: GroupMessage = await fetchRedis("zrange", `group:${group}:messages`, -1, -1);
+        return {
+            name: "",
+            email: "",
+            image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg";
+            id: latestMessage.id,
+            text: latestMessage.text,
+            timestamp: latestMessage.timestamp,
+            isGroup?: true,
+            groupId?: ""
+        }
+    }))
 
+
+    return forwardLatest ? groupMessages : groupData;
 }
