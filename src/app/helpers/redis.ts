@@ -27,7 +27,7 @@ export const fetchRedis = async (command: Command, ...args: (string | number)[])
 export const getUsersById = async (ids: string[], useSender = true) => {
     const res = await Promise.all(
         ids.map(async (id) => {
-            const sender = JSON.parse(await fetchRedis("get", `user:${id}`) as string) as User
+            const sender: User = JSON.parse(await fetchRedis("get", `user:${id}`) as string) as User
             return useSender ? { senderId: sender.id, senderEmail: sender.email, image: sender.image, name: sender.name } : sender
         })
     )
@@ -71,28 +71,33 @@ export const getUserFriendsById = async (user: string, includeChatList: boolean 
 
     return includeChatList ? data : friendsData;
 }
-export const getUserGroups = async (userId: string, forwardLatest: boolean = true): Promise<ChatList[] | Group[]> => {
+export const getUserGroups = async (userId: string, forwardLatest: boolean = true): Promise<GroupListItem[]> => {
     const getGroupIds: string[] = await fetchRedis("smembers", `user:${userId}:groups`);
     if (getGroupIds.length === 0) {
         return [];
     }
-    const groupData: Group[] = await Promise.all(getGroupIds.map(group => {
-        return fetchRedis("smembers", `group:${group}`)
-    }))
-    const groupMessages: ChatList[] = await Promise.all(getGroupIds.map(group => {
-        const latestMessage: GroupMessage = await fetchRedis("zrange", `group:${group}:messages`, -1, -1);
+
+    const groupMessages: GroupListItem[] = await Promise.all(getGroupIds.map(async group => {
+        let latestMessage: GroupMessage = {
+            id: '1',
+            senderId: "1",
+            text: "write a message to this group",
+            timestamp: 0
+        }
+        if (await fetchRedis("exists", `group:${group}:messages`)) {
+            latestMessage = await fetchRedis("zrange", `group:${group}:messages`, -1, -1);
+        }
+
+        const groupData: Group = JSON.parse(await fetchRedis("smembers", `group:${group}`)) as Group;
         return {
-            name: "",
-            email: "",
-            image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg";
-            id: latestMessage.id,
-            text: latestMessage.text,
+            groupId: group,
+            name: groupData.name,
+            latestMessage: latestMessage.text,
+            senderId: latestMessage.senderId,
             timestamp: latestMessage.timestamp,
-            isGroup?: true,
-            groupId?: ""
+            image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg"
         }
     }))
 
-
-    return forwardLatest ? groupMessages : groupData;
+    return groupMessages;
 }

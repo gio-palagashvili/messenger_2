@@ -8,6 +8,7 @@ import { BsPersonPlusFill } from "react-icons/bs";
 import FriendRequestsButton from "@/components/FriendRequestsButton";
 import { getUserFriendsById, getUserGroups } from "@/app/helpers/redis";
 import ChatList from "@/components/ChatList";
+import GroupList from "@/components/GroupList";
 import CreateGroupButton from "../CreateGroup";
 
 interface NavProps {
@@ -39,12 +40,12 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
       </div>
       <div className="h-[90%] w-full">
         <div className="h-1/2 w-full">
-          <h1 className="ml-3 text-zinc-500">Chats</h1>
+          <h1 className="ml-3 text-zinc-500 text-sm">Chats</h1>
           <ChatList friends={friends} session={session} />
         </div>
         <div className="h-1/2 w-full">
-          <h1 className="ml-3 text-zinc-500">Groups</h1>
-          <ChatList friends={userGroups} session={session} />
+          <h1 className="ml-3 text-zinc-500 text-sm">Groups</h1>
+          <GroupList session={session} groups={userGroups} />
         </div>
       </div>
       <div className="md:flex gap-2 text-sm font-semibold justify-center place-items-center">

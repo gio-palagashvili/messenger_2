@@ -41,7 +41,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         members.push(session.user.id);
 
         await db.sadd(`group:${id}`, JSON.stringify({
-            "name": groupName, "members": members
+            "name": groupName, "members": members, "image": "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg"
         }));
 
         await Promise.all(userFriends.map((friend) => {

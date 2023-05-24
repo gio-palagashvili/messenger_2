@@ -7,9 +7,11 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 
 interface ChatHeaderProps {
-  chatPartnerData: User;
+  chatPartnerData?: User;
+  groupDetails?: Group;
 }
-const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
+
+const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData, groupDetails }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const removeFriend = (chatPartnerId: string) => {
@@ -35,31 +37,57 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData }) => {
               placeholder="empty"
               fill={true}
               sizes="2.25rem"
-              src={chatPartnerData.image as string}
+              src={
+                chatPartnerData
+                  ? (chatPartnerData.image as string)
+                  : (groupDetails?.image as string)
+              }
               alt="Your profile picture"
             />
           </div>
           <div className="flex gap-10 justify-center place-items-center">
             <div className="flex flex-col">
               <span aria-hidden="true" className="text-white text-md">
-                {chatPartnerData.name}
+                {chatPartnerData ? chatPartnerData.name : groupDetails!.name}
               </span>
-              <span className="text-xs text-zinc-400" aria-hidden="true">
-                {chatPartnerData.email}
-              </span>
+              {chatPartnerData ? (
+                <span className="text-xs text-zinc-400" aria-hidden="true">
+                  {chatPartnerData.email}
+                </span>
+              ) : (
+                <div className="flex gap-1 overflow-ellipsis">
+                  {groupDetails!.members.map((u, index) => {
+                    const user = JSON.parse(u) as User;
+                    return (
+                      <span
+                        className="text-xs text-zinc-400"
+                        aria-hidden="true"
+                        key={index}
+                      >
+                        {user.email}
+                        {groupDetails!.members.length - 1 == index ? "" : ","}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div className="flex place-items-center">
-          <Button
-            className="text-[0.80rem] min-w-[100px]"
-            isLoading={loading}
-            showLoading={false}
-            onClick={() => removeFriend(chatPartnerData.id)}
-          >
-            <AiFillDelete />
-            Delete
-          </Button>
+          {chatPartnerData ? (
+            <Button
+              className="text-[0.80rem] min-w-[100px]"
+              isLoading={loading}
+              showLoading={false}
+              onClick={() => removeFriend(chatPartnerData?.id)}
+            >
+              <AiFillDelete />
+              Delete
+            </Button>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

@@ -15,7 +15,6 @@ interface Chat {
     id: string;
     messages: Messages[];
 }
-
 interface FriendRequest {
     id: string;
     senderId: string;
@@ -23,11 +22,20 @@ interface FriendRequest {
 }
 interface Group {
     name: string,
-    members: User[]
+    members: string[],
+    image: string;
 }
 interface GroupMessage {
     id: string;
     senderId: string;
     text: string;
     timestamp: number;
+}
+interface GroupListItem {
+    groupId: string;
+    name: string;
+    latestMessage: string;
+    senderId: string;
+    timestamp: number;
+    image: string;
 }

@@ -125,13 +125,11 @@ const ChatList: FC<ChatListProps> = ({ friends, session }) => {
 
               return timestampB - timestampA;
             })
-            .map((friend) => {
-              const chatId = friend.isGroup
-                ? friend.groupId
-                : chatIdConstructor(session.user.id, friend.id);
+            .map((friend, index) => {
+              const chatId = chatIdConstructor(session.user.id, friend.id);
               return (
                 <a
-                  href={!friend.isGroup ? `/home/chat/${chatId}` : ""}
+                  href={`/home/chat/${chatId}`}
                   key={friend.id}
                   className={cn(
                     "md:hover:bg-[#111318] md:p-3 rounded-lg duration-300 -mt-1 cursor-pointer w-full"
