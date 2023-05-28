@@ -10,6 +10,7 @@ import { getUserFriendsById, getUserGroups } from "@/app/helpers/redis";
 import ChatList from "@/components/ChatList";
 import GroupList from "@/components/GroupList";
 import CreateGroupButton from "../CreateGroup";
+import { db } from "@/lib/db";
 
 interface NavProps {
   session: Session;
@@ -38,7 +39,7 @@ const Nav = async ({ session, initialReqsCount }: NavProps) => {
           </Link>
         </div>
       </div>
-      <div className="h-[90%] w-full">
+      <div className="h-[80%] w-full">
         <div className="h-1/2 w-full">
           <h1 className="ml-3 text-zinc-500 text-sm">Chats</h1>
           <ChatList friends={friends} session={session} />

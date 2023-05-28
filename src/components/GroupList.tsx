@@ -1,5 +1,5 @@
 "use client";
-import { chatIdConstructor, cn, pusherKey } from "@/lib/utils";
+import { cn, pusherKey } from "@/lib/utils";
 import { Session } from "next-auth";
 import Image from "next/image";
 import { format } from "date-fns";
@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher";
 import toast, { Toaster } from "react-hot-toast";
-import NewMessageToast from "./ui/NewMessageToast";
 
 interface GroupListProps {
   groups: GroupListItem[];
@@ -26,87 +25,83 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
       });
     }
   }, [pathname]);
-  //   useEffect(() => {
-  //     pusherClient.subscribe(pusherKey(`user:${session.user.id}:chats`));
-  //     pusherClient.subscribe(pusherKey(`user:${session.user.id}:sent`));
-  //     pusherClient.subscribe(pusherKey(`user:${session.user.id}:friends`));
+  useEffect(() => {
+    const handleGroup = (groupData: GroupListItem) => {
+      setGroupState((prev) => {
+        return [...prev, groupData];
+      });
+    };
 
-  //     const messageHandler = (message: Message) => {
-  //       if (
-  //         pathname ==
-  //         `/home/chat/${chatIdConstructor(session.user.id, message.senderId)}`
-  //       ) {
-  //         setFriendsState((prev) => {
-  //           return prev.map((groups) => {
-  //             if (groups.id === message.senderId) {
-  //               const newData = {
-  //                 ...groups,
-  //                 text: message.text,
-  //                 timestamp: message.timestamp,
-  //               };
-  //               return newData;
-  //             }
-  //             return friend;
-  //           });
-  //         });
-  //         return;
-  //       }
+    pusherClient.subscribe(pusherKey(`user:newGroup:${session.user.id}`));
+    pusherClient.bind(`added_to_group`, handleGroup);
 
-  //       setFriendsState((prev) => {
-  //         return prev.map((friend) => {
-  //           if (friend.id === message.senderId) {
-  //             toast.custom((t) => (
-  //               <NewMessageToast message={message} user={friend} t={t} />
-  //             ));
-  //             const newData = {
-  //               ...friend,
-  //               text: message.text,
-  //               timestamp: message.timestamp,
-  //             };
-  //             return newData;
-  //           }
-  //           return friend;
-  //         });
-  //       });
-  //     };
+    //     const messageHandler = (message: Message) => {
+    //       if (
+    //         pathname ==
+    //         `/home/chat/${chatIdConstructor(session.user.id, message.senderId)}`
+    //       ) {
+    //         setFriendsState((prev) => {
+    //           return prev.map((groups) => {
+    //             if (groups.id === message.senderId) {
+    //               const newData = {
+    //                 ...groups,
+    //                 text: message.text,
+    //                 timestamp: message.timestamp,
+    //               };
+    //               return newData;
+    //             }
+    //             return friend;
+    //           });
+    //         });
+    //         return;
+    //       }
 
-  //     const messageHandlerSent = (message: Message) => {
-  //       setFriendsState((prev) => {
-  //         return prev.map((friend) => {
-  //           if (friend.id === message.recieverId) {
-  //             const newData = {
-  //               ...friend,
-  //               id: session.user.id,
-  //               text: message.text,
-  //               timestamp: message.timestamp,
-  //             };
-  //             return newData;
-  //           }
-  //           return friend;
-  //         });
-  //       });
-  //     };
+    //       setFriendsState((prev) => {
+    //         return prev.map((friend) => {
+    //           if (friend.id === message.senderId) {
+    //             toast.custom((t) => (
+    //               <NewMessageToast message={message} user={friend} t={t} />
+    //             ));
+    //             const newData = {
+    //               ...friend,
+    //               text: message.text,
+    //               timestamp: message.timestamp,
+    //             };
+    //             return newData;
+    //           }
+    //           return friend;
+    //         });
+    //       });
+    //     };
 
-  //     const friendHandler = (item: GroupListItem) => {
-  //       setFriendsState((prev) => {
-  //         return [...prev, item];
-  //       });
-  //     };
+    //     const messageHandlerSent = (message: Message) => {
+    //       setFriendsState((prev) => {
+    //         return prev.map((friend) => {
+    //           if (friend.id === message.recieverId) {
+    //             const newData = {
+    //               ...friend,
+    //               id: session.user.id,
+    //               text: message.text,
+    //               timestamp: message.timestamp,
+    //             };
+    //             return newData;
+    //           }
+    //           return friend;
+    //         });
+    //       });
+    //     };
 
-  //     pusherClient.bind("unseen_message", messageHandler);
-  //     pusherClient.bind("curr_user_sent", messageHandlerSent);
-  //     pusherClient.bind("friend_accepted", friendHandler);
+    //     const friendHandler = (item: GroupListItem) => {
+    //       setFriendsState((prev) => {
+    //         return [...prev, item];
+    //       });
+    //     };
 
-  //     return () => {
-  //       pusherClient.unbind("unseen_message", messageHandler);
-  //       pusherClient.unbind("curr_user_sent", messageHandlerSent);
-  //       pusherClient.unbind("friend_accepted", friendHandler);
-
-  //       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}:friends`));
-  //       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}:chats`));
-  //       pusherClient.unsubscribe(pusherKey(`user:${session.user.id}:sent`));
-  //     };
-  //   }, [pathname, session.user.id]);
+    return () => {
+      pusherClient.unsubscribe(pusherKey(`user:group:${session.user.id}`));
+      pusherClient.unbind(`added_to_group`, handleGroup);
+    };
+  }, [pathname, session.user.id]);
 
   return (
     <>

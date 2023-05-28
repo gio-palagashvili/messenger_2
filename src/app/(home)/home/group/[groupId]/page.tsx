@@ -1,5 +1,6 @@
 import { fetchRedis, getUsersById } from "@/app/helpers/redis";
 import ChatInput from "@/components/ChatInput";
+import GroupMessages from "@/components/GroupMessages";
 import Messages from "@/components/Messages";
 import ChatHeader from "@/components/ui/ChatHeader";
 import { authOptions } from "@/lib/authOptions";
@@ -20,6 +21,13 @@ const page = async ({ params }: pageProps) => {
 
   const sess = await getServerSession(authOptions);
   if (!sess) redirect("/login");
+  const isApart = (await fetchRedis(
+    "smembers",
+    `user:${sess.user.id}:groups`
+  )) as string[];
+  if (!isApart.includes(groupId)) {
+    redirect("/home");
+  }
 
   const res: string[] = await fetchRedis(
     "zrange",
@@ -27,9 +35,12 @@ const page = async ({ params }: pageProps) => {
     0,
     -1
   );
-  const messages: GroupMessage[] = res.map((m) => {
-    return JSON.parse(m) as GroupMessage;
-  });
+
+  const messages: GroupMessage[] = res
+    .map((m) => {
+      return JSON.parse(m) as GroupMessage;
+    })
+    .reverse();
 
   const groupRaw = JSON.parse(
     await fetchRedis("smembers", `group:${groupId}`)
@@ -40,6 +51,7 @@ const page = async ({ params }: pageProps) => {
   ).map((u) => {
     return JSON.stringify(u);
   });
+
   return (
     <div className="w-full h-full flex">
       <div className="w-full lg:w-[70%] h-full">
@@ -51,13 +63,14 @@ const page = async ({ params }: pageProps) => {
           }}
         />
         <div className="divider mt-0 mb-0 h-1"></div>
-        {groupId}
-        {/* <Messages
-          initialMessages={initialMessages}
+        <GroupMessages
+          initialMessages={messages}
           sessionId={sess.user.id}
-          chatPartnerData={chatPartnerData}
+          members={groupMembersData.map((u) => {
+            return JSON.parse(u) as User;
+          })}
         />
-        <ChatInput chatId={chatId} /> */}
+        <ChatInput chatId={groupId} />
       </div>
     </div>
   );

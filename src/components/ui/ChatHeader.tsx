@@ -64,7 +64,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData, groupDetails }) => {
                         aria-hidden="true"
                         key={index}
                       >
-                        {user.email}
+                        {user.name}
                         {groupDetails!.members.length - 1 == index ? "" : ","}
                       </span>
                     );

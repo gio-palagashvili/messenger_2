@@ -27,7 +27,7 @@ interface Group {
 }
 interface GroupMessage {
     id: string;
-    senderId: string;
+    sender: User;
     text: string;
     timestamp: number;
 }
@@ -35,7 +35,7 @@ interface GroupListItem {
     groupId: string;
     name: string;
     latestMessage: string;
-    senderId: string;
+    senderName: string;
     timestamp: number;
     image: string;
 }

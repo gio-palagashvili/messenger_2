@@ -42,7 +42,6 @@ export const POST = async (req: Request, res: NextApiResponse) => {
 
         return new Response("Added a friend", { status: 200 });
     } catch (error) {
-        console.log(error);
         handleError(error);
     }
 }

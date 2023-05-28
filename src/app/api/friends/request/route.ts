@@ -18,7 +18,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
 
         const userId = await fetchRedis("get", `user:email:${email}`);
 
-        if (!userId) return new Response("no user found", { status: 400 });
+        if (!userId) return new Response("user not found", { status: 400 });
         if (userId === sess.user.id) return new Response("can't add yourself as a friend", { status: 400 });
 
         const alrSent = await fetchRedis("sismember", `user:${userId}:friend_requests`, sess.user.id) as 0 | 1;

@@ -55,6 +55,7 @@ const Messages: FC<MessagesProps> = ({
             messages[index + 1]?.senderId === messages[index].senderId;
           const hasNextMessage =
             messages[index - 1]?.senderId === messages[index].senderId;
+
           return (
             <div
               key={index}

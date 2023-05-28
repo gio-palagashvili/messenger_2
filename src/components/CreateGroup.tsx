@@ -29,6 +29,13 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
+  const handleKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      createGroup();
+    }
+  };
+
   const setName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName(e.target.value);
   };
@@ -88,6 +95,7 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
                 className="pointer-events-none absolute transform left-3 idk"
               />
               <Input
+                onKeyDown={(e) => handleKeydown(e)}
                 className="pl-9"
                 placeholder="search friends..."
                 onChange={(e) => handleChange(e)}
@@ -190,7 +198,11 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
             <label htmlFor="" className="text-xs ml-1 mb-[0.3rem]">
               Name
             </label>
-            <Input placeholder="group chat #1" onChange={(e) => setName(e)} />
+            <Input
+              placeholder="group chat #1"
+              onChange={(e) => setName(e)}
+              onKeyDown={(e) => handleKeydown(e)}
+            />
           </div>
           <div className="final_buttons h-10 flex justify-end gap-2">
             <Button variant={"ghostUnderline"} onClick={handleClose}>

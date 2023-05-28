@@ -14,19 +14,20 @@ const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const sendMessage = () => {
-    setInput("");
     setIsLoading(true);
+    const url = "/api/messages/send";
+    const data = {
+      text: input,
+      chatId: chatId,
+    };
 
     axios
-      .post("/api/messages/send", {
-        text: input,
-        chatId: chatId,
-      })
-      .then((data) => {})
+      .post(url, data)
       .catch((err) => {
         errorToast(err);
       })
       .finally(() => {
+        setInput("");
         setIsLoading(false);
       });
   };

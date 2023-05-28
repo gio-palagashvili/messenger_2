@@ -1,7 +1,9 @@
 import { handleError } from '@/app/helpers/errorHanlder';
-import { getUserFriendsById } from '@/app/helpers/redis';
+import { getUserFriendsById, getUsersById } from '@/app/helpers/redis';
 import { authOptions } from '@/lib/authOptions';
 import { db } from '@/lib/db';
+import { pusherServer } from '@/lib/pusher';
+import { pusherKey } from '@/lib/utils';
 import { nanoid } from 'nanoid';
 import { NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
@@ -44,10 +46,23 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             "name": groupName, "members": members, "image": "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg"
         }));
 
-        await Promise.all(userFriends.map((friend) => {
-            db.sadd(`user:${friend.id}:groups`, id)
+        const groupData: GroupListItem = {
+            name: groupName,
+            groupId: id,
+            image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg",
+            latestMessage: "write a message to this group",
+            senderId: "1",
+            timestamp: 0
+        }
+        await Promise.all(userFriends.map(async (friend) => {
+            pusherServer.trigger(pusherKey(`user:newGroup:${friend.id}`), "added_to_group", groupData)
+            db.sadd(`user:${friend.id}:groups`, id);
         }))
-        await db.sadd(`user:${session.user.id}:groups`, id)
+
+        pusherServer.trigger(pusherKey(`user:newGroup:${session.user.id}`), "added_to_group", groupData)
+
+
+        await db.sadd(`user:${session.user.id}:groups`, id);
 
         return new Response("", { status: 200 })
     } catch (error) {

@@ -71,32 +71,40 @@ export const getUserFriendsById = async (user: string, includeChatList: boolean 
 
     return includeChatList ? data : friendsData;
 }
-export const getUserGroups = async (userId: string, forwardLatest: boolean = true): Promise<GroupListItem[]> => {
+export const getUserGroups = async (userId: string, forwardLatest: boolean = true): Promise<GroupListItem[] | Group[]> => {
     const getGroupIds: string[] = await fetchRedis("smembers", `user:${userId}:groups`);
     if (getGroupIds.length === 0) {
         return [];
     }
 
-    const groupMessages: GroupListItem[] = await Promise.all(getGroupIds.map(async group => {
-        let latestMessage: GroupMessage = {
-            id: '1',
-            senderId: "1",
-            text: "write a message to this group",
-            timestamp: 0
-        }
-        if (await fetchRedis("exists", `group:${group}:messages`)) {
-            latestMessage = await fetchRedis("zrange", `group:${group}:messages`, -1, -1);
+    // @ts-expect-error.
+    const groupMessages: GroupListItem[] | Group[] = await Promise.all(getGroupIds.map(async group => {
+        let latestMessage: GroupMessage;
+        const groupData: Group = JSON.parse(await fetchRedis("smembers", `group:${group}`)) as Group;
+
+        if (!await fetchRedis("exists", `group:${group}:messages`)) {
+            const data: GroupListItem = {
+                groupId: group,
+                name: groupData.name,
+                latestMessage: 'start your chat',
+                senderName: '',
+                timestamp: 0,
+                image: groupData.image
+            }
+            return data;
         }
 
-        const groupData: Group = JSON.parse(await fetchRedis("smembers", `group:${group}`)) as Group;
-        return {
+        latestMessage = JSON.parse(await fetchRedis("zrange", `group:${group}:messages`, -1, -1)) as GroupMessage;
+
+        const data: GroupListItem = {
             groupId: group,
             name: groupData.name,
             latestMessage: latestMessage.text,
-            senderId: latestMessage.senderId,
+            senderName: latestMessage.sender.name,
             timestamp: latestMessage.timestamp,
-            image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg"
+            image: groupData.image
         }
+        return forwardLatest ? data : groupData;
     }))
 
     return groupMessages;
