@@ -1,8 +1,8 @@
 interface User {
+    id: string
     name: string
     email: string
     image: string
-    id: string
 }
 interface Message {
     id: string;

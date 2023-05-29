@@ -8,29 +8,38 @@ import { errorToast } from "@/lib/customToasts";
 
 interface ChatInputProps {
   chatId: string;
+  isGroup?: boolean;
 }
 
-const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
+const ChatInput: FC<ChatInputProps> = ({ chatId, isGroup }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [input, setInput] = useState<string>("");
 
   const sendMessage = () => {
     setIsLoading(true);
-    const url = "/api/messages/send";
-    const data = {
-      text: input,
-      chatId: chatId,
-    };
 
-    axios
-      .post(url, data)
-      .catch((err) => {
-        errorToast(err);
-      })
-      .finally(() => {
-        setInput("");
-        setIsLoading(false);
-      });
+    if (input.length < 1) {
+      errorToast("please write one or more letters");
+      setIsLoading(false);
+    } else {
+      const url = !isGroup ? "/api/messages/send" : "/api/group/send";
+      const data = {
+        text: input,
+        chatId: chatId,
+      };
+
+      axios
+        .post(url, data)
+        .catch((err) => {
+          errorToast(err.message);
+        })
+        .finally(() => {
+          setInput("");
+          setIsLoading(false);
+        });
+    }
   };
+
   const handleChange = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key == "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -38,7 +47,6 @@ const ChatInput: FC<ChatInputProps> = ({ chatId }) => {
     }
   };
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const [input, setInput] = useState<string>("");
   return (
     <div className="w-full h-[10%] flex justify-center gap-2 place-items-center">
       <div className="w-[70%] lg:w-[80%] flex justify-center place-items-center">

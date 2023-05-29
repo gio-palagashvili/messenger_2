@@ -30,6 +30,12 @@ const Messages: FC<MessagesProps> = ({
     );
 
     const handle = (message: Message) => {
+      if (bottomRef.current) {
+        bottomRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
       setMessages((prev) => [message, ...prev]);
     };
 

@@ -1,22 +1,44 @@
 "use client";
-import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
+import { pusherClient } from "@/lib/pusher";
+import { cn, pusherKey } from "@/lib/utils";
+import { format, formatDistanceToNow } from "date-fns";
 import Image from "next/image";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 interface GroupMessagesProps {
   initialMessages: GroupMessage[];
   sessionId: string;
-  members: User[];
+  chatId: string;
 }
 
 const GroupMessages: FC<GroupMessagesProps> = ({
   initialMessages,
   sessionId,
-  members,
+  chatId,
 }) => {
   const [messages, setMessages] = useState<GroupMessage[]>(initialMessages);
   const bottomRef = useRef<null | HTMLDivElement>(null);
+  useEffect(() => {
+    const handleMessage = (messgae: GroupMessage) => {
+      if (bottomRef.current) {
+        bottomRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      setMessages((prev) => {
+        return [messgae, ...prev];
+      });
+    };
+    pusherClient.subscribe(pusherKey(`group:${chatId}:group_message`));
+    pusherClient.bind(`new_message`, handleMessage);
+
+    return () => {
+      pusherClient.unsubscribe(pusherKey(`group:${chatId}:group_message`));
+      pusherClient.unbind("new_message", handleMessage);
+    };
+  }, []);
 
   return (
     <div className="w-full justify-center place-items-center flex h-[80%] overflow-scroll flex-col tooltip tooltip-open">
@@ -53,14 +75,16 @@ const GroupMessages: FC<GroupMessagesProps> = ({
 
               <div className="flex flex-col">
                 {!hasPrevMessage && !isCurrUser ? (
-                  <p className="text-xs self-start ml-2 text-zinc-300">gio</p>
+                  <p className="text-xs self-start ml-2 text-zinc-300 mt-2">
+                    {message.sender.name.split(" ")[0]}
+                  </p>
                 ) : (
                   ""
                 )}
                 <div
                   data-tip={`${formatDistanceToNow(message.timestamp, {
                     addSuffix: true,
-                  })} · 12`}
+                  })} · ${format(message.timestamp, "HH:mm")}`}
                   className={cn(
                     "tooltip w-fit p-2 px-4 max-w-lg min-h-10 min-w-10",
                     isCurrUser

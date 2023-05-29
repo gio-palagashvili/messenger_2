@@ -66,11 +66,9 @@ const page = async ({ params }: pageProps) => {
         <GroupMessages
           initialMessages={messages}
           sessionId={sess.user.id}
-          members={groupMembersData.map((u) => {
-            return JSON.parse(u) as User;
-          })}
+          chatId={groupId}
         />
-        <ChatInput chatId={groupId} />
+        <ChatInput chatId={groupId} isGroup={true} />
       </div>
     </div>
   );

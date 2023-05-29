@@ -71,13 +71,12 @@ export const getUserFriendsById = async (user: string, includeChatList: boolean 
 
     return includeChatList ? data : friendsData;
 }
-export const getUserGroups = async (userId: string, forwardLatest: boolean = true): Promise<GroupListItem[] | Group[]> => {
+export const getUserGroups = async (userId: string, forwardLatest: boolean = true): Promise<GroupListItem[] | string[]> => {
     const getGroupIds: string[] = await fetchRedis("smembers", `user:${userId}:groups`);
     if (getGroupIds.length === 0) {
         return [];
     }
 
-    // @ts-expect-error.
     const groupMessages: GroupListItem[] | Group[] = await Promise.all(getGroupIds.map(async group => {
         let latestMessage: GroupMessage;
         const groupData: Group = JSON.parse(await fetchRedis("smembers", `group:${group}`)) as Group;
@@ -104,8 +103,9 @@ export const getUserGroups = async (userId: string, forwardLatest: boolean = tru
             timestamp: latestMessage.timestamp,
             image: groupData.image
         }
-        return forwardLatest ? data : groupData;
+
+        return data;
     }))
 
-    return groupMessages;
+    return forwardLatest ? groupMessages : getGroupIds;
 }
