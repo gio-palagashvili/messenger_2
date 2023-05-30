@@ -129,16 +129,13 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
                   )}
                 >
                   <div className="flex gap-[0.4rem]">
-                    <div className="relative w-14 h-14 flex md:w-11 md:h-11 hover:scale-95 duration-400">
-                      <Image
-                        referrerPolicy="no-referrer"
-                        className="rounded-full min-w-[3.5rem] md:min-w-[2.75rem] object-cover"
-                        placeholder="empty"
-                        fill={true}
-                        sizes="2.25rem"
-                        src={group.image as string}
-                        alt="friend profile picture"
-                      />
+                    <div
+                      className={`relative w-14 h-14 flex md:w-11 md:h-11 hover:scale-95 duration-400 rounded-full 
+                      place-items-center bg-[${group.image}]`}
+                    >
+                      <p className="text-center absolute top-[47%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">
+                        {group.name.split("")[0]}
+                      </p>
                     </div>
                     <div className="hidden md:flex flex-col w-[70%]">
                       <span

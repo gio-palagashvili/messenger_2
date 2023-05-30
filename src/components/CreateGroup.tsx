@@ -68,6 +68,7 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
   };
   const handleClose = () => {
     setOpen(false);
+    setSearchQuery("");
     setIsLoading(false);
     setSelectedFriends([]);
   };
@@ -97,6 +98,7 @@ const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
               <Input
                 onKeyDown={(e) => handleKeydown(e)}
                 className="pl-9"
+                value={searchQuery}
                 placeholder="search friends..."
                 onChange={(e) => handleChange(e)}
               />

@@ -42,15 +42,19 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         });
         members.push(session.user.id);
 
-        await db.sadd(`group:${id}`, JSON.stringify({
-            "name": groupName, "members": members, "image": "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg"
-        }));
+        const colors = ['#1abc9c', '#2ecc71', '#3498db', '#9b59b6', '#e67e22', '#e74c3c', '#c0392b', '#f39c12'];
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
+
+        await db.sadd(`group:${id}`, JSON.stringify({
+            "name": groupName, "members": members, "image": randomColor
+        }));
         const groupData: GroupListItem = {
             name: groupName,
             groupId: id,
-            image: "https://upload.wikimedia.org/wikipedia/commons/b/be/Facebook_Messenger_logo_2020.svg",
+            image: randomColor,
             latestMessage: "write a message to this group",
+            //@ts-expect-error
             senderId: "1",
             timestamp: 0
         }
