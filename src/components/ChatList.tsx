@@ -15,17 +15,8 @@ interface ChatListProps {
 }
 
 const ChatList: FC<ChatListProps> = ({ friends, session }) => {
-  const [unseen, setUnseen] = useState<Message[]>([]);
   const [friendsState, setFriendsState] = useState<ChatList[]>(friends);
   const pathname = usePathname();
-
-  useEffect(() => {
-    if (pathname?.includes("home")) {
-      setUnseen((prev) => {
-        return prev.filter((msg) => !pathname.includes(msg.senderId));
-      });
-    }
-  }, [pathname]);
 
   useEffect(() => {
     pusherClient.subscribe(pusherKey(`user:${session.user.id}:chats`));

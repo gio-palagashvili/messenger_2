@@ -42,21 +42,21 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         });
         members.push(session.user.id);
 
-        const colors = ['#1abc9c', '#2ecc71', '#3498db', '#9b59b6', '#e67e22', '#e74c3c', '#c0392b', '#f39c12'];
+        const colors = ['#1abc9c', '#2ecc71', '#3498db', '#9b59b6', '#e74c3c', '#c0392b', '#f39c12'];
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
-
 
         await db.sadd(`group:${id}`, JSON.stringify({
             "name": groupName, "members": members, "image": randomColor
         }));
+
         const groupData: GroupListItem = {
             name: groupName,
             groupId: id,
             image: randomColor,
-            latestMessage: "write a message to this group",
+            latestMessage: "start your chat",
             //@ts-expect-error
             senderId: "1",
-            timestamp: 0
+            timestamp: Date.now(),
         }
         await Promise.all(userFriends.map(async (friend) => {
             pusherServer.trigger(pusherKey(`user:newGroup:${friend.id}`), "added_to_group", groupData)

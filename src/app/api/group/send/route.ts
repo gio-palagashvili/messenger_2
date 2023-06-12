@@ -10,6 +10,7 @@ import { nanoid } from 'nanoid';
 import { NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
+
 export const POST = async (req: Request, res: NextApiResponse) => {
     try {
         const session = await getServerSession(authOptions);
@@ -31,7 +32,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             text: text,
             timestamp: time
         }
-        // groupMessageValidator.parse(message);
+        groupMessageValidator.parse(message);
 
         await db.zadd(`group:${chatId}:messages`, {
             score: time,
@@ -39,7 +40,6 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         });
 
         pusherServer.trigger(pusherKey(`group:${chatId}:group_message`), "new_message", message);
-
 
         return new Response('', { status: 200 })
     } catch (error) {
