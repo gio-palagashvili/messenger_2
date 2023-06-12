@@ -1,7 +1,7 @@
 "use client";
 import { FC, useState, useRef } from "react";
-import Button from "./ui/Button";
-import { IoSendSharp } from "react-icons/io5";
+import Button from "../ui/Button";
+import { IoSendSharp, IoAttach } from "react-icons/io5";
 import axios from "axios";
 import { cn } from "@/lib/utils";
 import { errorToast } from "@/lib/customToasts";
@@ -50,6 +50,15 @@ const ChatInput: FC<ChatInputProps> = ({ chatId, isGroup }) => {
   return (
     <div className="w-full h-[10%] flex justify-center gap-2 place-items-center">
       <div className="w-[70%] lg:w-[80%] flex justify-center place-items-center">
+        <Button
+          className="flex mr-2"
+          variant={"ghost"}
+          isLoading={isLoading}
+          loadingType={"animate-pulse"}
+          showLoading={false}
+        >
+          <IoAttach color="#fff" size={25} className="rotate-45" />
+        </Button>
         <textarea
           value={input}
           ref={textareaRef}

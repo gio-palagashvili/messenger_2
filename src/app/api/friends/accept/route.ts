@@ -32,8 +32,10 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             text: `you can now chat with ${id.name}`,
             timestamp: 0,
         }
+        console.log(dataToSend);
         pusherServer.trigger(pusherKey(`user:${idToAdd}:friends`), "friend_accepted", {
-            ...dataToSend
+            ...sess.user,
+            text: `you can now chat with ${sess.user.name}`,
         });
         pusherServer.trigger(pusherKey(`user:${sess.user.id}:friends`), "friend_accepted", {
             ...dataToSend

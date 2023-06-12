@@ -5,10 +5,10 @@ import { db } from '@/lib/db';
 import { pusherServer } from '@/lib/pusher';
 import { pusherKey } from '@/lib/utils';
 import { groupMessageValidator } from '@/lib/validators/messages.zod';
-import { m } from 'framer-motion';
 import { nanoid } from 'nanoid';
 import { NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
+
 
 export const POST = async (req: Request, res: NextApiResponse) => {
     try {
@@ -31,7 +31,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
             text: text,
             timestamp: time
         }
-        // groupMessageValidator.parse(message);
+        groupMessageValidator.parse(message);
 
         await db.zadd(`group:${chatId}:messages`, {
             score: time,
@@ -39,7 +39,6 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         });
 
         pusherServer.trigger(pusherKey(`group:${chatId}:group_message`), "new_message", message);
-
 
         return new Response('', { status: 200 })
     } catch (error) {

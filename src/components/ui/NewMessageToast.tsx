@@ -16,7 +16,7 @@ const NewMessageToast: FC<NewMessageToastProps> = ({ t, message, user }) => {
     <a>
       <div
         className={cn(
-          "w-96 p-3 mb-1 rounded-lg pointer-events-auto bg-off flex cursor-pointer",
+          "w-96 p-3 mb-1 rounded-lg pointer-events-auto bg-off flex cursor-pointer drop-shadow-lg",
           { "animate-enter": t.visible, "animate-leave": !t.visible }
         )}
       >

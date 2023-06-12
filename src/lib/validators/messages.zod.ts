@@ -7,6 +7,7 @@ export const messageValidator = z.object({
     text: z.string().min(1).max(1000),
     timestamp: z.number()
 })
+
 export const groupMessageValidator = z.object({
     id: z.string(),
     sender: z.object({
