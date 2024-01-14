@@ -18,6 +18,7 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
   const pathname = usePathname();
 
   useEffect(() => {
+    console.log(groupState); //!
     if (pathname?.includes("home")) {
       setUnseen((prev) => {
         return prev.filter((msg) => !pathname.includes(msg.senderId));
@@ -116,10 +117,10 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
                           className="text-[0.80rem] text-zinc-400 mt-[-2px] ml-[2px] truncate"
                           aria-hidden="true"
                         >
-                          {group.senderName === session.user.name
-                            ? "you"
-                            : group.senderName.split(" ")[0]}
-                          : {group.latestMessage}
+                          {group.senderName && group.senderName.length > 1
+                            ? group.senderName + ": "
+                            : ""}
+                          {group.latestMessage}
                         </span>
                         {group.timestamp ? (
                           <>

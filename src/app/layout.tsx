@@ -1,11 +1,6 @@
 import Provider from "@/components/Provider";
 import "./globals.css";
 
-import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
-import { extractRouterConfig } from "uploadthing/server";
-
-import { ourFileRouter } from "./api/uploadthing/core";
-
 export const metadata = {
   title: "Messenger",
   description: "nextjs messenger app",
@@ -26,10 +21,7 @@ export default function RootLayout({
             type="image/x-icon"
           />
         </head>
-        <body className="w-full h-full">
-          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
-          {children}
-        </body>
+        <body className="w-full h-full">{children}</body>
       </html>
     </Provider>
   );

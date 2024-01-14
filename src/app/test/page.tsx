@@ -1,25 +1,38 @@
 "use client";
-import { UploadButton } from "@uploadthing/react";
-import { FC } from "react";
-import { OurFileRouter } from "../api/uploadthing/core";
 
-interface pageProps {}
+import axios from "axios";
+import { useState } from "react";
 
-const page: FC<pageProps> = ({}) => {
+export default function Homes() {
+  const [file, setFile] = useState<File>();
+
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!file) return;
+
+    try {
+      const data = new FormData();
+      data.set("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: data,
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+    } catch (e: any) {
+      console.error(e);
+    }
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <UploadButton<OurFileRouter>
-        endpoint="imageUploader"
-        onClientUploadComplete={(res) => {
-          console.log("Files: ", res);
-          alert("Upload Completed");
-        }}
-        onUploadError={(error: Error) => {
-          alert(`ERROR! ${error.message}`);
-        }}
+    <form onSubmit={onSubmit}>
+      <input
+        type="file"
+        name="file"
+        onChange={(e) => setFile(e.target.files?.[0])}
       />
-    </main>
+      <input type="submit" value="Upload" />
+    </form>
   );
-};
-
-export default page;
+}

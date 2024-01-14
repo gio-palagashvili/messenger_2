@@ -14,7 +14,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         const session = await getServerSession(authOptions);
         if (!session) return new Response("", { status: 401 });
 
-        const { text, chatId } = await req.json();
+        const { text, chatId, type } = await req.json();
         const [userId1, userId2] = chatId.split("--");
         if (session.user.id !== userId1 && session.user.id !== userId2) return new Response("", { status: 401 });
 
@@ -27,37 +27,39 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         if (!areFriends) return new Response("", { status: 400 });
 
         const time = Date.now();
+
         const messageData: Message = {
             id: nanoid(),
             senderId: session.user.id,
             text: text,
             timestamp: time,
-            recieverId: chatPartnerId
+            recieverId: chatPartnerId,
+            type: type,
         }
-        const message = messageValidator.parse(messageData);
 
         await db.zadd(`chat:${chatId}:messages`, {
             score: time,
-            member: JSON.stringify(message)
+            member: JSON.stringify(messageData)
         });
 
         pusherServer.trigger(pusherKey(
             `chat:${chatId}:messages`
         ), 'sent_message', {
-            ...message
+            ...messageData
         });
 
         // todo? find a better way if there is one
         pusherServer.trigger(pusherKey(`user:${chatPartnerId}:chats`), "unseen_message", {
-            ...message,
+            ...messageData,
         })
 
         pusherServer.trigger(pusherKey(`user:${session.user.id}:sent`), "curr_user_sent", {
-            ...message
+            ...messageData
         })
 
         return new Response("", { status: 200 })
     } catch (error) {
+        console.log(error);
         handleError(error);
     }
 }
