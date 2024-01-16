@@ -1,6 +1,6 @@
 import { fetchRedis, getUsersById } from "@/app/helpers/redis";
-import ChatInput from "@/components/chat/ChatInput";
-import Messages from "@/components/messages/Messages";
+import ChatInput from "@/components/ChatInput";
+import Messages from "@/components/Messages";
 import ChatHeader from "@/components/ui/ChatHeader";
 import { authOptions } from "@/lib/authOptions";
 import { messagesValidator } from "@/lib/validators/messages.zod";

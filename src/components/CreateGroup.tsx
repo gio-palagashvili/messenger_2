@@ -9,11 +9,11 @@ import Image from "next/image";
 import { errorToast, successToast } from "@/lib/customToasts";
 import axios from "axios";
 
-interface CreateGroupProps {
+interface CreateGroupButtonProps {
   friends: ChatList[];
 }
 
-const CreateGroup: FC<CreateGroupProps> = ({ friends }) => {
+const CreateGroupButton: FC<CreateGroupButtonProps> = ({ friends }) => {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [selectedFriends, setSelectedFriends] = useState<ChatList[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -22,7 +22,7 @@ const CreateGroup: FC<CreateGroupProps> = ({ friends }) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useClickOutside(ref, () => {
-    // i didn't use handleClose here because user might accidentally click outside
+    // i didnt use handleClose here because user might accidentally click outside
     setOpen(false);
   });
 
@@ -222,4 +222,4 @@ const CreateGroup: FC<CreateGroupProps> = ({ friends }) => {
   );
 };
 
-export default CreateGroup;
+export default CreateGroupButton;

@@ -1,11 +1,14 @@
 import { fetchRedis, getUsersById } from "@/app/helpers/redis";
-import ChatInput from "@/components/chat/ChatInput";
-import GroupMessages from "@/components/messages/GroupMessages";
-import Messages from "@/components/messages/Messages";
+import ChatInput from "@/components/ChatInput";
+import GroupMessages from "@/components/GroupMessages";
+import Messages from "@/components/Messages";
 import ChatHeader from "@/components/ui/ChatHeader";
 import { authOptions } from "@/lib/authOptions";
+import { errorToast } from "@/lib/customToasts";
+import { db } from "@/lib/db";
+import { messagesValidator } from "@/lib/validators/messages.zod";
 import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 interface pageProps {
   params: {

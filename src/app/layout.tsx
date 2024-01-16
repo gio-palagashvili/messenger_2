@@ -1,5 +1,6 @@
 import Provider from "@/components/Provider";
 import "./globals.css";
+import { Inter, Roboto } from "next/font/google";
 
 export const metadata = {
   title: "Messenger",

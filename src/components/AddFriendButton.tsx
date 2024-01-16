@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormData } from "@/types/zod";
 import Input from "@/components/ui/Input";
+import { toast } from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import { errorToast, successToast } from "@/lib/customToasts";
 

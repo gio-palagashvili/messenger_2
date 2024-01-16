@@ -1,11 +1,12 @@
 "use client";
 import { cn, pusherKey } from "@/lib/utils";
 import { Session } from "next-auth";
+import Image from "next/image";
 import { format } from "date-fns";
 import { usePathname } from "next/navigation";
 import { FC, useEffect, useState } from "react";
 import { pusherClient } from "@/lib/pusher";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 interface GroupListProps {
   groups: GroupListItem[];
@@ -25,7 +26,6 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
       });
     }
   }, [pathname]);
-
   useEffect(() => {
     const handleGroup = (groupData: GroupListItem) => {
       setGroupState((prev) => {
@@ -33,42 +33,76 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
       });
     };
 
-    const handleNewMessage = (message: GroupMessage) => {
-      setGroupState((prev) => {
-        return prev.map((msg) => {
-          if (msg.senderName == message.sender.name) {
-            const newData: GroupListItem = {
-              ...msg,
-              latestMessage: message.text,
-              timestamp: message.timestamp,
-              senderName: message.sender.name,
-            };
-            return newData;
-          }
-          return msg;
-        });
-      });
-    };
-
-    groupState.map((group) => {
-      pusherClient.subscribe(pusherKey(`group:${group.groupId}:group_message`));
-      pusherClient.bind("new_message", handleNewMessage);
-    });
-
     pusherClient.subscribe(pusherKey(`user:newGroup:${session.user.id}`));
     pusherClient.bind(`added_to_group`, handleGroup);
+
+    // const messageHandler = (message: Message) => {
+    //   if (
+    //     pathname ==
+    //     `/home/chat/${chatIdConstructor(session.user.id, message.senderId)}`
+    //   ) {
+    //     setFriendsState((prev) => {
+    //       return prev.map((groups) => {
+    //         if (groups.id === message.senderId) {
+    //           const newData = {
+    //             ...groups,
+    //             text: message.text,
+    //             timestamp: message.timestamp,
+    //           };
+    //           return newData;
+    //         }
+    //         return friend;
+    //       });
+    //     });
+    //     return;
+    //   }
+
+    //       setFriendsState((prev) => {
+    //         return prev.map((friend) => {
+    //           if (friend.id === message.senderId) {
+    //             toast.custom((t) => (
+    //               <NewMessageToast message={message} user={friend} t={t} />
+    //             ));
+    //             const newData = {
+    //               ...friend,
+    //               text: message.text,
+    //               timestamp: message.timestamp,
+    //             };
+    //             return newData;
+    //           }
+    //           return friend;
+    //         });
+    //       });
+    //     };
+
+    //     const messageHandlerSent = (message: Message) => {
+    //       setFriendsState((prev) => {
+    //         return prev.map((friend) => {
+    //           if (friend.id === message.recieverId) {
+    //             const newData = {
+    //               ...friend,
+    //               id: session.user.id,
+    //               text: message.text,
+    //               timestamp: message.timestamp,
+    //             };
+    //             return newData;
+    //           }
+    //           return friend;
+    //         });
+    //       });
+    //     };
+
+    //     const friendHandler = (item: GroupListItem) => {
+    //       setFriendsState((prev) => {
+    //         return [...prev, item];
+    //       });
+    //     };
 
     return () => {
       pusherClient.unsubscribe(pusherKey(`user:group:${session.user.id}`));
       pusherClient.unbind(`added_to_group`, handleGroup);
-      groupState.map((group) => {
-        pusherClient.unsubscribe(
-          pusherKey(`group:${group.groupId}:group_message`)
-        );
-        pusherClient.unbind("new_message", handleNewMessage);
-      });
     };
-  }, [pathname, session.user.id, groupState]);
+  }, [pathname, session.user.id]);
 
   return (
     <>
@@ -98,8 +132,7 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
                   <div className="flex gap-[0.4rem]">
                     <div
                       className={`relative w-14 h-14 flex md:w-11 md:h-11 hover:scale-95 duration-400 rounded-full 
-                      place-items-center`}
-                      style={{ backgroundColor: group.image }}
+                      place-items-center bg-[${group.image}]`}
                     >
                       <p className="text-center absolute top-[47%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">
                         {group.name.split("")[0]}
@@ -119,8 +152,8 @@ const GroupList: FC<GroupListProps> = ({ groups, session }) => {
                         >
                           {group.senderName && group.senderName.length > 1
                             ? group.senderName + ": "
-                            : ""}
-                          {group.latestMessage}
+                            : "you can now start chatting"}
+
                         </span>
                         {group.timestamp ? (
                           <>
