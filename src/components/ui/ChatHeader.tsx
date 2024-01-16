@@ -5,6 +5,7 @@ import Button from "./Button";
 import Image from "next/image";
 import axios from "axios";
 import { redirect } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface ChatHeaderProps {
   chatPartnerData?: User;
@@ -31,19 +32,27 @@ const ChatHeader: FC<ChatHeaderProps> = ({ chatPartnerData, groupDetails }) => {
       <div className="flex w-[95%]">
         <div className="flex gap-2 text-sm font-semibold place-items-center w-full">
           <div className="relative h-11 w-11">
-            <Image
-              referrerPolicy="no-referrer"
-              className="rounded-full"
-              placeholder="empty"
-              fill={true}
-              sizes="2.25rem"
-              src={
-                chatPartnerData
-                  ? (chatPartnerData.image as string)
-                  : (groupDetails?.image as string)
-              }
-              alt="Your profile picture"
-            />
+            {groupDetails ?
+              <div
+                className={cn(`relative w-14 h-14 flex md:w-11 md:h-11 hover:scale-95 duration-400 rounded-full place-items-center`,
+                  `bg-[${groupDetails.image}]`)}
+              >
+                <p className="text-center absolute top-[47%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl">
+                  {groupDetails.name.split("")[0]}
+                </p>
+              </div>
+              :
+              <Image
+                referrerPolicy="no-referrer"
+                className="rounded-full"
+                placeholder="empty"
+                fill={true}
+                sizes="2.25rem"
+                src={
+                  chatPartnerData!.image as string
+                }
+                alt="Your profile picture"
+              />}
           </div>
           <div className="flex gap-10 justify-center place-items-center">
             <div className="flex flex-col">
